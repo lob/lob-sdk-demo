@@ -1,0 +1,11 @@
+{
+  "devDependencies": {
+    "@types/node": "^17.0.10"
+  },
+  "dependencies": {
+    "body-parser": "^1.19.1",
+    "express": "^4.17.2",
+    "lob": "^6.5.5",
+    "lob-sdk-ts": "github:lob/lob-sdk-ts"
+  }
+}

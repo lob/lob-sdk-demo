@@ -1,0 +1,20 @@
+<!doctype html>
+<html>
+<%- include('shared/head') -%>
+
+<body>
+  <%- include('shared/nav') -%>
+  <div class='core-content'>
+    <%- include('shared/header') -%>
+    <div class='body-wrapper'>
+      <div class='body-content'>
+        <p><strong>Create Postcard</strong> <%- JSON.stringify(createdPostcard) %></p>
+        <p><strong>Get Postcard</strong> <%- JSON.stringify(retrievedPostcard) %></p>
+        <p><strong>List Postcards</strong> <%- JSON.stringify(listedPostcard) %></p>
+        <p><strong>Delete Postcard</strong> <%- JSON.stringify(deletedPostcard) %></p>
+      </div>
+    </div>
+  </div>
+</body>
+
+</html>

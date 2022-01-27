@@ -1,0 +1,30 @@
+<nav class='left-banner menu-items'>
+  <ul>
+    <h2><img style='width: 30px; margin-right: 10px;'
+        src="https://cdn.iconscout.com/icon/free/png-512/typescript-1174965.png" /><a href="/">Home</a></h2>
+    <hr>
+    <h4 class='api-section' data-api='pm-api'>Print & Mail API <span class='open-caret'>></span><span class='closed-caret'>^</span></h4>
+    <div class='nav-section' id='pm-api'>
+      <li><a href="/addresses">Addresses</a></li>
+      <li><a href="/postcards">Postcards</a></li>
+    </div>
+    <hr>
+
+    <hr>
+    <h4 class='api-section' data-api='av-api'>Finance (private) <span class='open-caret'>></span><span class='closed-caret'>^</span></h4>
+    <div class='nav-section' id='av-api'>
+      <li><a href="/us_verifications">US Verifications</a></li>
+    </div>
+  </ul>
+</nav>
+
+
+<script>
+  $(document).ready(function(){
+    $(".api-section").click(function(e) {   
+      e.target.classList.toggle("checked");
+      $('#' + e.target.getAttribute('pm-api')).toggleClass("open-nav");
+      e.stopPropagation();
+    });
+  });
+</script>
