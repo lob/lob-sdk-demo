@@ -1,0 +1,20 @@
+<!doctype html>
+<html>
+<%- include('shared/head') -%>
+
+<body>
+  <%- include('shared/nav') -%>
+  <div class='core-content'>
+    <%- include('shared/header') -%>
+    <div class='body-wrapper'>
+      <div class='body-content'>
+        <p><strong>Create Address</strong> <%- JSON.stringify(createdAddress) %></p>
+        <p><strong>Get Address</strong> <%- JSON.stringify(retrievedAddress) %></p>
+        <p><strong>List Addresses</strong> <%- JSON.stringify(listedAddresses) %></p>
+        <p><strong>Delete Address</strong> <%- JSON.stringify(deletedAddress) %></p>
+      </div>
+    </div>
+  </div>
+</body>
+
+</html>

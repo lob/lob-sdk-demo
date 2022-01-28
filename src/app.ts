@@ -57,26 +57,32 @@ class App {
         let id;
         try {
             const result = await new AddressesApi(config).create(addressData);
+            if (result.id) {
+                id = result.id;
+            } else {
+                id = "";
+                throw new Error("Address creation must return a valid ID");
+            }
         } catch (err: any) {
             console.error(err);
         }
         return id;
     }
 
-    private async createTemplateForVersions(): Promise<string> {
-        const templateData: TemplateWritable = {
-            description: "Newer Template",
-            html: "<html>Updated HTML for {{name}}</html>",
-        };
-        let id;
-        try {
-            const result = await new TemplatesApi(config).create(templateData);
-            id = result.id;
-        } catch (err: any) {
-            console.error(err);
-        }
-        return id;
-    }
+    // private async createTemplateForVersions(): Promise<string> {
+    //     const templateData: TemplateWritable = {
+    //         description: "Newer Template",
+    //         html: "<html>Updated HTML for {{name}}</html>",
+    //     };
+    //     let id;
+    //     try {
+    //         const result = await new TemplatesApi(config).create(templateData);
+    //         id = result.id;
+    //     } catch (err: any) {
+    //         console.error(err);
+    //     }
+    //     return id;
+    // }
 
     private async deleteAddress(addressId: string) {
         try {
@@ -86,13 +92,13 @@ class App {
         }
     }
 
-    private async deleteTemplate(templateId: string) {
-        try {
-            await new TemplatesApi(config).delete(templateId);
-        } catch (err: any) {
-            console.error(err);
-        }
-    }
+    // private async deleteTemplate(templateId: string) {
+    //     try {
+    //         await new TemplatesApi(config).delete(templateId);
+    //     } catch (err: any) {
+    //         console.error(err);
+    //     }
+    // }
 
     private async deleteBankAccount(bankId: string) {
         try {
