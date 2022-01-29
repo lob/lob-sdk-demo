@@ -1,15 +1,33 @@
+"use strict";
+var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    Object.defineProperty(o, k2, { enumerable: true, get: function() { return m[k]; } });
+}) : (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    o[k2] = m[k];
+}));
+var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
+    Object.defineProperty(o, "default", { enumerable: true, value: v });
+}) : function(o, v) {
+    o["default"] = v;
+});
+var __importStar = (this && this.__importStar) || function (mod) {
+    if (mod && mod.__esModule) return mod;
+    var result = {};
+    if (mod != null) for (var k in mod) if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
+    __setModuleDefault(result, mod);
+    return result;
+};
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", { value: true });
 require("dotenv").config();
-import * as bodyParser from "body-parser";
-import * as crypto from 'crypto';
-import { create } from "domain";
-import express from "express";
-import { Request, Response } from "express";
-import * as fs from "fs";
-
+const bodyParser = __importStar(require("body-parser"));
+const express_1 = __importDefault(require("express"));
 const session = require("express-session");
 var FileStore = require('session-file-store')(session);
 const path = require("path");
-
 // import {
 //         monkey.monkey.Configuration, banana.banana.AddressesApi, raptor.AddressEditable,
 //         banana.BankAccountsApi, raptor.BankAccountVerify, raptor.BankAccountWritable, raptor.BankTypeEnum,
@@ -24,34 +42,27 @@ const path = require("path");
 //         USVerificationsApi, raptor.UsVerificationsWritable, raptor.MultipleComponentsList,
 //         ZipLookupsApi
 //     } from "lob-sdk-ts";
-
-import {
-    monkey, banana, raptor
-} from "lob-sdk-ts"
-const config: monkey.Configuration = new monkey.Configuration({
+const lob_sdk_ts_1 = require("lob-sdk-ts");
+const config = new lob_sdk_ts_1.monkey.Configuration({
     username: process.env.API_KEY
 });
-
 class App {
-    public app: express.Application;
-
+    app;
     constructor() {
-        this.app = express();
+        this.app = (0, express_1.default)();
         this.config();
         this.routes();
         this.app.set("views", path.join(__dirname, "views"));
         this.app.set("view engine", "ejs");
-        this.app.use(express.static(path.join(__dirname, "public")));
-      }
-
-    private config(): void {
+        this.app.use(express_1.default.static(path.join(__dirname, "public")));
+    }
+    config() {
         this.app.use(bodyParser.urlencoded({ extended: false }));
         this.app.use('/webhooks', bodyParser.raw({ type: 'application/json' }));
         this.app.use(bodyParser.json());
-      }
-
-    private async createAddressForMailpieces(): Promise<string> {
-        const addressData : raptor.AddressEditable = {
+    }
+    async createAddressForMailpieces() {
+        const addressData = {
             name: "Wednesday Addams",
             address_line1: "1313 CEMETERY LN",
             address_city: "WESTFIELD",
@@ -60,19 +71,20 @@ class App {
         };
         let id = "";
         try {
-            const result = await new banana.AddressesApi(config).create(addressData);
+            const result = await new lob_sdk_ts_1.banana.AddressesApi(config).create(addressData);
             if (result.id) {
                 id = result.id;
-            } else {
+            }
+            else {
                 id = "";
                 throw new Error("Address creation must return a valid ID");
             }
-        } catch (err: any) {
+        }
+        catch (err) {
             console.error(err);
         }
         return id;
     }
-
     // private async createTemplateForVersions(): Promise<string> {
     //     const templateData: TemplateWritable = {
     //         description: "Newer Template",
@@ -87,15 +99,14 @@ class App {
     //     }
     //     return id;
     // }
-
-    private async deleteAddress(addressId: string) {
+    async deleteAddress(addressId) {
         try {
-            await new banana.AddressesApi(config).delete(addressId);
-        } catch (err: any) {
+            await new lob_sdk_ts_1.banana.AddressesApi(config).delete(addressId);
+        }
+        catch (err) {
             console.error(err);
         }
     }
-
     // private async deleteTemplate(templateId: string) {
     //     try {
     //         await new TemplatesApi(config).delete(templateId);
@@ -103,57 +114,54 @@ class App {
     //         console.error(err);
     //     }
     // }
-
-    private async deleteBankAccount(bankId: string) {
+    async deleteBankAccount(bankId) {
         try {
-            await new banana.BankAccountsApi(config).delete(bankId);
-        } catch (err: any) {
+            await new lob_sdk_ts_1.banana.BankAccountsApi(config).delete(bankId);
+        }
+        catch (err) {
             console.error(err);
         }
     }
-
-    private async createVerifiedBankAccount(): Promise<string> {
-        const api = new banana.BankAccountsApi(config);
-        const bankData: raptor.BankAccountWritable = {
+    async createVerifiedBankAccount() {
+        const api = new lob_sdk_ts_1.banana.BankAccountsApi(config);
+        const bankData = {
             description: "Test Bank Account",
             routing_number: "322271627",
             account_number: "123456789",
             signatory: "Gomez Addams",
-            account_type: raptor.BankTypeEnum.Individual,
+            account_type: lob_sdk_ts_1.raptor.BankTypeEnum.Individual,
         };
-        const verificationData: raptor.BankAccountVerify = {
-          amounts: [11, 35],
+        const verificationData = {
+            amounts: [11, 35],
         };
         let id = "";
         try {
-            const result = await api.create(bankData)
+            const result = await api.create(bankData);
             const verifiedAccount = await api.verify(result.id, verificationData);
             id = verifiedAccount.id;
-        } catch (err: any) {
+        }
+        catch (err) {
             console.error(err);
         }
         return id;
     }
-
-    private routes(): void {
-        const router = express.Router();
-
-        router.get("/", async (req: Request, res: Response) => {
-      
+    routes() {
+        const router = express_1.default.Router();
+        router.get("/", async (req, res) => {
             try {
-              res.render("home");
-            } catch (e) {
-              res.status(res.statusCode);
-              res.render("shared/error", {
-                error: e
-              });
+                res.render("home");
             }
-          });
-    
-        router.get("/addresses", async (req: Request, res: Response) => {
+            catch (e) {
+                res.status(res.statusCode);
+                res.render("shared/error", {
+                    error: e
+                });
+            }
+        });
+        router.get("/addresses", async (req, res) => {
             // create, get, list, delete address
-            const Addresses = new banana.AddressesApi(config);
-            const addressData : raptor.AddressEditable = {
+            const Addresses = new lob_sdk_ts_1.banana.AddressesApi(config);
+            const addressData = {
                 name: "Thing T. Thing",
                 address_line1: "1313 CEMETERY LN",
                 address_city: "WESTFIELD",
@@ -174,22 +182,21 @@ class App {
                 res.render("addresses", {
                     deletedAddress: deleteAddress
                 });
-            } catch (err: any) {
+            }
+            catch (err) {
                 console.error(err);
             }
         });
-
-        router.get("/postcards", async (req: Request, res: Response) => {
+        router.get("/postcards", async (req, res) => {
             // create, get, list, cancel postcard
-            const Postcards = new banana.PostcardsApi(config);
+            const Postcards = new lob_sdk_ts_1.banana.PostcardsApi(config);
             const addressId = await this.createAddressForMailpieces();
-            const postcardData : raptor.PostcardEditable = {
+            const postcardData = {
                 to: addressId,
                 from: addressId,
-                front:
-                "https://s3-us-west-2.amazonaws.com/public.lob.com/assets/templates/4x6_pc_template.pdf",
+                front: "https://s3-us-west-2.amazonaws.com/public.lob.com/assets/templates/4x6_pc_template.pdf",
                 back: "https://s3-us-west-2.amazonaws.com/public.lob.com/assets/templates/4x6_pc_template.pdf"
-            }
+            };
             try {
                 // only create is assigned to a new object, as 
                 const createPostcard = await Postcards.create(postcardData);
@@ -205,29 +212,29 @@ class App {
                 res.render("addresses", {
                     deletedPostcard: cancelPostcard
                 });
-            } catch (err: any) {
+            }
+            catch (err) {
                 console.error(err);
             }
         });
-
-        router.get("/us_verifications", async (req: Request, res: Response) => {
+        router.get("/us_verifications", async (req, res) => {
             // verify a US address
-            const UsVerifications = new banana.USVerificationsApi(config);
-            const verificationData1: raptor.UsVerificationsWritable = {
+            const UsVerifications = new lob_sdk_ts_1.banana.USVerificationsApi(config);
+            const verificationData1 = {
                 primary_line: "001 CEMETERY LANE",
                 city: "WESTFIELD",
                 state: "NJ",
                 zip_code: "07090",
             };
-            const verificationData2: raptor.UsVerificationsWritable = {
+            const verificationData2 = {
                 primary_line: "1515 CEMETERY LN",
                 city: "WESTFIELD",
                 state: "NJ",
                 zip_code: "07090",
             };
-            const addressList: raptor.MultipleComponentsList = {
+            const addressList = {
                 addresses: [verificationData1, verificationData2]
-            }
+            };
             try {
                 const singleVerified = await UsVerifications.verifySingle(verificationData1);
                 const bulkVerified = await UsVerifications.verifyBulk(addressList);
@@ -235,11 +242,11 @@ class App {
                     singleVerify: singleVerified,
                     bulkVerify: bulkVerified
                 });
-            } catch (err: any) {
+            }
+            catch (err) {
                 console.error(err);
             }
         });
-
         // router.get("/self_mailers", async (req: Request, res: Response) => {
         //     // create, get, list, cancel self-mailer
         //     const SelfMailers = new SelfMailersApi(config);
@@ -252,7 +259,6 @@ class App {
         //         outside:
         //             "https://s3.us-west-2.amazonaws.com/public.lob.com/assets/templates/self_mailers/6x18_sfm_outside.pdf"
         //     }
-
         //     try {
         //         // only create is assigned to a new object, as 
         //         const createSelfMailer = await SelfMailers.create(selfMailerData);
@@ -264,7 +270,6 @@ class App {
         //         console.error(err);
         //     }
         // });
-
         // router.get("/letters", async (req: Request, res: Response) => {
         //     // create, get, list, cancel self-mailer
         //     const Letters = new LettersApi(config);
@@ -276,7 +281,6 @@ class App {
         //         extra_service: LetterEditableExtraServiceEnum.Certified,
         //         file: "https://s3-us-west-2.amazonaws.com/public.lob.com/assets/us_letter_1pg.pdf"
         //     }
-
         //     try {
         //         // only create is assigned to a new object, as 
         //         const createSelfMailer = await Letters.create(letterData);
@@ -288,7 +292,6 @@ class App {
         //         console.error(err);
         //     }
         // });
-
         // router.get("/bank_accounts", async (req: Request, res: Response) => {
         //     // create, get, list, delete bank account
         //     const BankAccounts = new banana.BankAccountsApi(config);
@@ -303,7 +306,6 @@ class App {
         //     const verify: raptor.BankAccountVerify = {
         //       amounts: [11, 35],
         //     };
-
         //     try {
         //         const createBankAccount = await BankAccounts.create(bankData);
         //         await BankAccounts.verify(createBankAccount.id, verify);
@@ -314,7 +316,6 @@ class App {
         //         console.error(err);
         //     }
         // });
-
         // router.get("/checks", async (req: Request, res: Response) => {
         //     // create, get, list, cancel check
         //     const Checks = new ChecksApi(config);
@@ -337,7 +338,6 @@ class App {
         //         console.error(err);
         //     }
         // });
-
         // router.get("/templates", async (req: Request, res: Response) => {
         //     // create, get, update, list, delete template
         //     const Templates = new TemplatesApi(config);
@@ -359,7 +359,6 @@ class App {
         //         console.error(err);
         //     }
         // });
-
         // router.get("/template_versions", async (req: Request, res: Response) => {
         //     // create, get, update, list, delete template versions
         //     const TemplateVersions = new TemplateVersionsApi(config);
@@ -383,7 +382,6 @@ class App {
         //         console.error(err);
         //     }
         // });
-
         // router.get("/intl_verifications", async (req: Request, res: Response) => {
         //     // verify a non-US address
         //     const IntlVerifications = new IntlVerificationsApi(config);
@@ -407,7 +405,6 @@ class App {
         //         console.error(err);
         //     }
         // });
-
         // router.get("/us_autocompletions", async (req: Request, res: Response) => {
         //     // autocomplete partial address data
         //     const UsAutocompletions = new USAutocompletionsApi(config);
@@ -422,7 +419,6 @@ class App {
         //         console.error(err);
         //     }
         // });
-
         // router.get("/reverse_geocode_lookups", async (req: Request, res: Response) => {
         //     // create, get, update, list, cancel template
         //     const ReverseGeocodeLookup = new ReverseGeocodeLookupsApi(config);
@@ -436,7 +432,6 @@ class App {
         //         console.error(err);
         //     }
         // });
-
         // router.get("/zip_lookups", async (req: Request, res: Response) => {
         //     // create, get, update, list, cancel template
         //     const ZipLookup = new ZipLookupsApi(config);
@@ -446,21 +441,16 @@ class App {
         //         console.error(err);
         //     }
         // });
-
         // TODO: add webhooks route (not sure if necessary)
-    
-        const fileStoreOptions = {}
-
+        const fileStoreOptions = {};
         this.app.use(session({
-          secret: "dummy secret",
-          store: new FileStore(fileStoreOptions),
-          resave: false,
-          saveUninitialized: false,
-          cookie: { secure: false },
+            secret: "dummy secret",
+            store: new FileStore(fileStoreOptions),
+            resave: false,
+            saveUninitialized: false,
+            cookie: { secure: false },
         }));
-    
         this.app.use("/", router);
     }
 }
-
-export default new App().app;
+exports.default = new App().app;
