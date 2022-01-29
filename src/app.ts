@@ -10,25 +10,22 @@ const session = require("express-session");
 var FileStore = require('session-file-store')(session);
 const path = require("path");
 
-// import {
-//         monkey.monkey.Configuration, banana.banana.AddressesApi, raptor.AddressEditable,
-//         banana.BankAccountsApi, raptor.BankAccountVerify, raptor.BankAccountWritable, raptor.BankTypeEnum,
-//         ChecksApi, CheckEditable,
-//         IntlVerificationsApi, IntlVerificationWritable, CountryExtended, IntlVerificationsPayload,
-//         LettersApi, LetterEditable, LetterEditableExtraServiceEnum,
-//         banana.PostcardsApi, raptor.PostcardEditable,
-//         ReverseGeocodeLookupsApi, Location,
-//         SelfMailersApi, SelfMailerEditable,
-//         TemplatesApi, TemplateWritable, TemplateUpdate, TemplateVersionWritable, TemplateVersionsApi,
-//         USAutocompletionsApi,
-//         USVerificationsApi, raptor.UsVerificationsWritable, raptor.MultipleComponentsList,
-//         ZipLookupsApi
-//     } from "lob-sdk-ts";
-
 import {
-    monkey, banana, raptor
-} from "lob-sdk-ts"
-const config: monkey.Configuration = new monkey.Configuration({
+        Configuration, AddressesApi, AddressEditable,
+        BankAccountsApi, BankAccountVerify, BankAccountWritable, BankTypeEnum,
+        ChecksApi, CheckEditable,
+        IntlVerificationsApi, IntlVerificationWritable, CountryExtended, IntlVerificationsPayload,
+        LettersApi, LetterEditable, LetterEditableExtraServiceEnum,
+        PostcardsApi, PostcardEditable,
+        ReverseGeocodeLookupsApi, Location,
+        SelfMailersApi, SelfMailerEditable,
+        TemplatesApi, TemplateWritable, TemplateUpdate, TemplateVersionWritable, TemplateVersionsApi,
+        USAutocompletionsApi,
+        USVerificationsApi, UsVerificationsWritable, MultipleComponentsList,
+        ZipLookupsApi
+    } from "lob-sdk-ts";
+
+const config: Configuration = new Configuration({
     username: process.env.API_KEY
 });
 
@@ -51,7 +48,7 @@ class App {
       }
 
     private async createAddressForMailpieces(): Promise<string> {
-        const addressData : raptor.AddressEditable = {
+        const addressData : AddressEditable = {
             name: "Wednesday Addams",
             address_line1: "1313 CEMETERY LN",
             address_city: "WESTFIELD",
@@ -60,7 +57,7 @@ class App {
         };
         let id = "";
         try {
-            const result = await new banana.AddressesApi(config).create(addressData);
+            const result = await new AddressesApi(config).create(addressData);
             if (result.id) {
                 id = result.id;
             } else {
@@ -90,7 +87,7 @@ class App {
 
     private async deleteAddress(addressId: string) {
         try {
-            await new banana.AddressesApi(config).delete(addressId);
+            await new AddressesApi(config).delete(addressId);
         } catch (err: any) {
             console.error(err);
         }
@@ -106,22 +103,22 @@ class App {
 
     private async deleteBankAccount(bankId: string) {
         try {
-            await new banana.BankAccountsApi(config).delete(bankId);
+            await new BankAccountsApi(config).delete(bankId);
         } catch (err: any) {
             console.error(err);
         }
     }
 
     private async createVerifiedBankAccount(): Promise<string> {
-        const api = new banana.BankAccountsApi(config);
-        const bankData: raptor.BankAccountWritable = {
+        const api = new BankAccountsApi(config);
+        const bankData: BankAccountWritable = {
             description: "Test Bank Account",
             routing_number: "322271627",
             account_number: "123456789",
             signatory: "Gomez Addams",
-            account_type: raptor.BankTypeEnum.Individual,
+            account_type: BankTypeEnum.Individual,
         };
-        const verificationData: raptor.BankAccountVerify = {
+        const verificationData: BankAccountVerify = {
           amounts: [11, 35],
         };
         let id = "";
@@ -152,8 +149,8 @@ class App {
     
         router.get("/addresses", async (req: Request, res: Response) => {
             // create, get, list, delete address
-            const Addresses = new banana.AddressesApi(config);
-            const addressData : raptor.AddressEditable = {
+            const Addresses = new AddressesApi(config);
+            const addressData : AddressEditable = {
                 name: "Thing T. Thing",
                 address_line1: "1313 CEMETERY LN",
                 address_city: "WESTFIELD",
@@ -181,9 +178,9 @@ class App {
 
         router.get("/postcards", async (req: Request, res: Response) => {
             // create, get, list, cancel postcard
-            const Postcards = new banana.PostcardsApi(config);
+            const Postcards = new PostcardsApi(config);
             const addressId = await this.createAddressForMailpieces();
-            const postcardData : raptor.PostcardEditable = {
+            const postcardData : PostcardEditable = {
                 to: addressId,
                 from: addressId,
                 front:
@@ -212,20 +209,20 @@ class App {
 
         router.get("/us_verifications", async (req: Request, res: Response) => {
             // verify a US address
-            const UsVerifications = new banana.USVerificationsApi(config);
-            const verificationData1: raptor.UsVerificationsWritable = {
+            const UsVerifications = new USVerificationsApi(config);
+            const verificationData1: UsVerificationsWritable = {
                 primary_line: "001 CEMETERY LANE",
                 city: "WESTFIELD",
                 state: "NJ",
                 zip_code: "07090",
             };
-            const verificationData2: raptor.UsVerificationsWritable = {
+            const verificationData2: UsVerificationsWritable = {
                 primary_line: "1515 CEMETERY LN",
                 city: "WESTFIELD",
                 state: "NJ",
                 zip_code: "07090",
             };
-            const addressList: raptor.MultipleComponentsList = {
+            const addressList: MultipleComponentsList = {
                 addresses: [verificationData1, verificationData2]
             }
             try {
@@ -291,9 +288,9 @@ class App {
 
         // router.get("/bank_accounts", async (req: Request, res: Response) => {
         //     // create, get, list, delete bank account
-        //     const BankAccounts = new banana.BankAccountsApi(config);
+        //     const BankAccounts = new BankAccountsApi(config);
         //     // we might need to create new valid routing and account numbers
-        //     const bankData: raptor.BankAccountWritable = {
+        //     const bankData: BankAccountWritable = {
         //         description: "Test Bank Account",
         //         routing_number: "322271627",
         //         account_number: "123456789",
