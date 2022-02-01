@@ -5,11 +5,13 @@
 <body>
   <%- include('shared/nav') -%>
   <div class='core-content'>
-    <%- include('shared/header') -%>
     <div class='body-wrapper'>
       <div class='body-content'>
-        <p><strong>Single US Address Verification</strong> <%- JSON.stringify(singleVerify) %></p>
-        <p><strong>Bulk US Address Verification</strong> <%- JSON.stringify(bulkVerify) %></p>
+        <a href='https://docs.lob.com/#tag/US-Verifications' target='_blank'>
+          <h4>https://docs.lob.com/#tag/US-Verifications</h4>
+        </a>
+        <p><strong>Single US Address Verification</strong> <pre><%- JSON.stringify(singleVerify, null, 2) %></pre></p>
+        <p><strong>Bulk US Address Verification</strong> <pre><%- JSON.stringify(bulkVerify, null, 2) %></pre></p>
       </div>
     </div>
   </div>

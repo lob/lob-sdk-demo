@@ -1,0 +1,22 @@
+<!doctype html>
+<html>
+<%- include('shared/head') -%>
+
+<body>
+  <%- include('shared/nav') -%>
+  <div class='core-content'>
+    <div class='body-wrapper'>
+      <div class='body-content'>
+        <a href='https://docs.lob.com/#tag/Checks' target='_blank'>
+          <h4>https://docs.lob.com/#tag/Checks</h4>
+        </a>
+        <p><strong>Create Check</strong> <pre><%- JSON.stringify(createdCheck, null, 2) %></pre></p>
+        <p><strong>Get Check</strong> <pre><%- JSON.stringify(retrievedCheck, null, 2) %></pre></p>
+        <p><strong>List Checks</strong> <pre><%- JSON.stringify(listedChecks, null, 2) %></pre></p>
+        <p><strong>Delete Check</strong> <pre><%- JSON.stringify(deletedCheck, null, 2) %></pre></p>
+      </div>
+    </div>
+  </div>
+</body>
+
+</html>

@@ -6,14 +6,24 @@
     <h4 class='api-section' data-api='pm-api'>Print & Mail API <span class='open-caret'>></span><span class='closed-caret'>^</span></h4>
     <div class='nav-section' id='pm-api'>
       <li><a href="/addresses">Addresses</a></li>
+      <li><a href="/bank_accounts">Bank Accounts</a></li>
+      <li><a href="/checks">Checks</a></li>
+      <li><a href="/checks">Bank Accounts</a></li>
+      <li><a href="/letters">Letters</a></li>
       <li><a href="/postcards">Postcards</a></li>
+      <li><a href="/self_mailers">Self Mailers</a></li>
+      <li><a href="/templates">Templates</a></li>
+      <li><a href="/template_versions">Template Versions</a></li>
     </div>
     <hr>
 
     <hr>
-    <h4 class='api-section' data-api='av-api'>Finance (private) <span class='open-caret'>></span><span class='closed-caret'>^</span></h4>
+    <h4 class='api-section' data-api='av-api'>Address Verifications <span class='open-caret'>></span><span class='closed-caret'>^</span></h4>
     <div class='nav-section' id='av-api'>
+      <li><a href="/intl_verifications">International Verifications</a></li>
+      <li><a href="/reverse_geocode_lookups">Reverse Geocode Lookups</a></li>
       <li><a href="/us_verifications">US Verifications</a></li>
+      <li><a href="/zip_lookups">US Zip Lookups</a></li>
     </div>
   </ul>
 </nav>
@@ -23,7 +33,7 @@
   $(document).ready(function(){
     $(".api-section").click(function(e) {   
       e.target.classList.toggle("checked");
-      $('#' + e.target.getAttribute('pm-api')).toggleClass("open-nav");
+      $('#' + e.target.getAttribute('data-api')).toggleClass("open-nav");
       e.stopPropagation();
     });
   });

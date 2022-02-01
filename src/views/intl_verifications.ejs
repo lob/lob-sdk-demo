@@ -1,0 +1,20 @@
+<!doctype html>
+<html>
+<%- include('shared/head') -%>
+
+<body>
+  <%- include('shared/nav') -%>
+  <div class='core-content'>
+    <div class='body-wrapper'>
+      <div class='body-content'>
+        <a href='https://docs.lob.com/#tag/Intl-Verifications' target='_blank'>
+          <h4>https://docs.lob.com/#tag/Intl-Verifications</h4>
+        </a>
+        <p><strong>Single International Address Verification</strong> <pre><%- JSON.stringify(singleVerify, null, 2) %></pre></p>
+        <p><strong>Bulk International Address Verification</strong> <pre><%- JSON.stringify(bulkVerify, null, 2) %></pre></p>
+      </div>
+    </div>
+  </div>
+</body>
+
+</html>

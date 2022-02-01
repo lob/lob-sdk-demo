@@ -16,17 +16,19 @@
   "dependencies": {
     "body-parser": "^1.19.1",
     "dotenv": "^14.3.2",
+    "ejs": "^3.1.6",
     "express": "^4.17.2",
     "express-session": "^1.17.2",
     "fs-extra": "^10.0.0",
     "lob": "^6.5.5",
-    "lob-sdk-ts": "github:lob/lob-sdk-ts",
+    "lob-sdk-ts": "file:../SdkGeneration/sdks_openapi_gen/sdks/lob-sdk-ts",
     "session-file-store": "^1.5.0"
   },
   "scripts": {
     "build-ts": "node ./utils/build.cjs",
     "postinstall": "npm run build-ts",
     "lint": "tslint --project \"tsconfig.json\"",
-    "start-dev": "nodemon --config nodemon.json --inspect-brk src/server.ts"
+    "start-dev": "nodemon --config nodemon.json --inspect-brk src/server.ts",
+    "run-app": "npm run build-ts && npm run start-dev"
   }
 }

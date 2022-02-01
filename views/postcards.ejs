@@ -5,13 +5,15 @@
 <body>
   <%- include('shared/nav') -%>
   <div class='core-content'>
-    <%- include('shared/header') -%>
     <div class='body-wrapper'>
       <div class='body-content'>
-        <p><strong>Create Postcard</strong> <%- JSON.stringify(createdPostcard) %></p>
-        <p><strong>Get Postcard</strong> <%- JSON.stringify(retrievedPostcard) %></p>
-        <p><strong>List Postcards</strong> <%- JSON.stringify(listedPostcard) %></p>
-        <p><strong>Delete Postcard</strong> <%- JSON.stringify(deletedPostcard) %></p>
+        <a href='https://docs.lob.com/#tag/Postcards' target='_blank'>
+          <h4>https://docs.lob.com/#tag/Postcards</h4>
+        </a>
+        <p><strong>Create Postcard</strong> <pre><%- JSON.stringify(createdPostcard, null, 2) %></pre></p>
+        <p><strong>Get Postcard</strong> <pre><%- JSON.stringify(retrievedPostcard, null, 2) %></pre></p>
+        <p><strong>List Postcards</strong> <pre><%- JSON.stringify(listedPostcards, null, 2) %></pre></p>
+        <p><strong>Delete Postcard</strong> <pre><%- JSON.stringify(deletedPostcard, null, 2) %></pre></p>
       </div>
     </div>
   </div>
