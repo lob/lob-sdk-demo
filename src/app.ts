@@ -23,7 +23,7 @@ import {
         TemplatesApi, TemplateWritable, TemplateUpdate, TemplateVersionWritable, TemplateVersionUpdatable, TemplateVersionsApi,
         USAutocompletionsApi, UsAutocompletionsWritable,
         UsVerification, UsVerifications, USVerificationsApi, UsVerificationsWritable, MultipleComponentsList,
-        ZipLookupsApi, Zip
+        ZipLookupsApi, Zip, ZipEditable
     } from "lob-sdk-ts";
 
 const config: Configuration = new Configuration({
@@ -484,9 +484,11 @@ class App {
         router.get("/zip_lookups", async (req: Request, res: Response) => {
             // look up a zip code
             const ZipLookup = new ZipLookupsApi(av_config);
+            const zipRequest : ZipEditable = {
+                zip_code: "07090"
+            }
             try {
-                console.log("BEFORE running Zip Lookup");
-                const zipLookup : Zip = await ZipLookup.lookup("07090");
+                const zipLookup : Zip = await ZipLookup.lookup(zipRequest);
                 console.log("Result of Zip Lookup: ", zipLookup);
                 res.render("zip_lookups", {
                     lookup: zipLookup

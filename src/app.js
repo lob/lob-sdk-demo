@@ -496,13 +496,15 @@ class App {
         router.get("/zip_lookups", (req, res) => __awaiter(this, void 0, void 0, function* () {
             // look up a zip code
             const ZipLookup = new lob_sdk_ts_1.ZipLookupsApi(av_config);
+            const zipRequest = {
+                zip_code: "07090"
+            };
             try {
-                console.log("BEFORE running Zip Lookup");
-                const zipLookup = yield ZipLookup.lookup("07090");
+                const zipLookup = yield ZipLookup.lookup(zipRequest);
                 console.log("Result of Zip Lookup: ", zipLookup);
-                // res.render("zip_lookups", {
-                //     lookup: zipLookup
-                // });
+                res.render("zip_lookups", {
+                    lookup: zipLookup
+                });
             }
             catch (err) {
                 console.error(err);
