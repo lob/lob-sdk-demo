@@ -1,0 +1,22 @@
+<!doctype html>
+<html>
+<%- include('shared/head') -%>
+
+<body>
+  <%- include('shared/nav') -%>
+  <div class='core-content'>
+    <div class='body-wrapper'>
+      <div class='body-content'>
+        <a href='https://docs.lob.com/#tag/Addresses' target='_blank'>
+          <h4>https://docs.lob.com/#tag/Addresses</h4>
+        </a>
+        <p><strong>Create Address</strong> <pre><%- JSON.stringify(createdAddress, null, 2) %></pre></p>
+        <p><strong>Get Address</strong> <pre><%- JSON.stringify(retrievedAddress, null, 2) %></pre></p>
+        <p><strong>List Addresses</strong> <pre><%- JSON.stringify(listedAddresses, null, 2) %></pre></p>
+        <p><strong>Delete Address</strong> <pre><%- JSON.stringify(deletedAddress, null, 2) %></pre></p>
+      </div>
+    </div>
+  </div>
+</body>
+
+</html>

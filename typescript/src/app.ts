@@ -24,14 +24,14 @@ import {
         USAutocompletionsApi, UsAutocompletionsWritable,
         UsVerification, UsVerifications, USVerificationsApi, UsVerificationsWritable, MultipleComponentsList,
         ZipLookupsApi, Zip, ZipEditable
-    } from "lob-sdk-ts";
+    } from "@lob/lob-typescript-sdk";
 
 const config: Configuration = new Configuration({
-    username: process.env.API_KEY
+    username: process.env.LOB_API_KEY
 });
 
 const av_config: Configuration = new Configuration({
-    username: process.env.LIVE_KEY
+    username: process.env.LOB_API_KEY
 });
 
 class App {
@@ -138,20 +138,9 @@ class App {
 
     private routes(): void {
         const router = express.Router();
-
-        router.get("/", async (req: Request, res: Response) => {
-      
-            try {
-              res.render("./home");
-            } catch (e) {
-              res.status(res.statusCode);
-              res.render("./shared/error", {
-                error: e
-              });
-            }
-          });
     
         router.get("/addresses", async (req: Request, res: Response) => {
+            console.log('hit');
             // create, get, list, delete address
             const Addresses = new AddressesApi(config);
             const addressData : AddressEditable = {
