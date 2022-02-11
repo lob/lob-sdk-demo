@@ -156,7 +156,7 @@ class App {
                 const getAddress : Address = await Addresses.get(createAddress.id);
                 const listAddresses : AddressList = await Addresses.list(2);
                 const deleteAddress : AddressDeletion = await Addresses.delete(createAddress.id);
-                res.render("./addresses", {
+                res.statusCode(200).send({
                     createdAddress: createAddress,
                     retrievedAddress: getAddress,
                     listedAddresses: listAddresses,

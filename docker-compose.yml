@@ -17,3 +17,13 @@ services:
       LOB_API_KEY: <<REDACTED>>
     ports:
       - "5000:5000"
+
+  java-demo:
+    build: java/.
+    depends_on:
+      - ui
+    environment:
+      PORT: 5000
+      LOB_API_KEY: <<REDACTED>>
+    ports:
+      - "5000:5000"
