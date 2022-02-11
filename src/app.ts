@@ -24,7 +24,7 @@ import {
         USAutocompletionsApi, UsAutocompletionsWritable,
         UsVerification, UsVerifications, USVerificationsApi, UsVerificationsWritable, MultipleComponentsList,
         ZipLookupsApi, Zip, ZipEditable
-    } from "lob-sdk-ts";
+    } from "@lob/lob-typescript-sdk";
 
 const config: Configuration = new Configuration({
     username: process.env.API_KEY
@@ -489,7 +489,6 @@ class App {
             }
             try {
                 const zipLookup : Zip = await ZipLookup.lookup(zipRequest);
-                console.log("Result of Zip Lookup: ", zipLookup);
                 res.render("zip_lookups", {
                     lookup: zipLookup
                 });

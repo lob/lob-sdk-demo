@@ -37,11 +37,11 @@ const express_1 = __importDefault(require("express"));
 const session = require("express-session");
 var FileStore = require('session-file-store')(session);
 const path = require("path");
-const lob_sdk_ts_1 = require("lob-sdk-ts");
-const config = new lob_sdk_ts_1.Configuration({
+const lob_typescript_sdk_1 = require("@lob/lob-typescript-sdk");
+const config = new lob_typescript_sdk_1.Configuration({
     username: process.env.API_KEY
 });
-const av_config = new lob_sdk_ts_1.Configuration({
+const av_config = new lob_typescript_sdk_1.Configuration({
     username: process.env.LIVE_KEY
 });
 class App {
@@ -69,7 +69,7 @@ class App {
             };
             let id = "";
             try {
-                const result = yield new lob_sdk_ts_1.AddressesApi(config).create(addressData);
+                const result = yield new lob_typescript_sdk_1.AddressesApi(config).create(addressData);
                 if (result.id) {
                     id = result.id;
                 }
@@ -91,7 +91,7 @@ class App {
             };
             let id = "";
             try {
-                const result = yield new lob_sdk_ts_1.TemplatesApi(config).create(templateData);
+                const result = yield new lob_typescript_sdk_1.TemplatesApi(config).create(templateData);
                 id = result.id;
             }
             catch (err) {
@@ -103,7 +103,7 @@ class App {
     deleteAddress(addressId) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
-                yield new lob_sdk_ts_1.AddressesApi(config).delete(addressId);
+                yield new lob_typescript_sdk_1.AddressesApi(config).delete(addressId);
             }
             catch (err) {
                 console.error(err);
@@ -113,7 +113,7 @@ class App {
     deleteTemplate(templateId) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
-                yield new lob_sdk_ts_1.TemplatesApi(config).delete(templateId);
+                yield new lob_typescript_sdk_1.TemplatesApi(config).delete(templateId);
             }
             catch (err) {
                 console.error(err);
@@ -123,7 +123,7 @@ class App {
     deleteBankAccount(bankId) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
-                yield new lob_sdk_ts_1.BankAccountsApi(config).delete(bankId);
+                yield new lob_typescript_sdk_1.BankAccountsApi(config).delete(bankId);
             }
             catch (err) {
                 console.error(err);
@@ -132,13 +132,13 @@ class App {
     }
     createVerifiedBankAccount() {
         return __awaiter(this, void 0, void 0, function* () {
-            const api = new lob_sdk_ts_1.BankAccountsApi(config);
+            const api = new lob_typescript_sdk_1.BankAccountsApi(config);
             const bankData = {
                 description: "Test Bank Account",
                 routing_number: "322271627",
                 account_number: "123456789",
                 signatory: "Gomez Addams",
-                account_type: lob_sdk_ts_1.BankTypeEnum.Individual,
+                account_type: lob_typescript_sdk_1.BankTypeEnum.Individual,
             };
             const verificationData = {
                 amounts: [11, 35],
@@ -170,7 +170,7 @@ class App {
         }));
         router.get("/addresses", (req, res) => __awaiter(this, void 0, void 0, function* () {
             // create, get, list, delete address
-            const Addresses = new lob_sdk_ts_1.AddressesApi(config);
+            const Addresses = new lob_typescript_sdk_1.AddressesApi(config);
             const addressData = {
                 name: "Thing T. Thing",
                 address_line1: "1313 CEMETERY LN",
@@ -197,7 +197,7 @@ class App {
         }));
         router.get("/postcards", (req, res) => __awaiter(this, void 0, void 0, function* () {
             // create, get, list, cancel postcard
-            const Postcards = new lob_sdk_ts_1.PostcardsApi(config);
+            const Postcards = new lob_typescript_sdk_1.PostcardsApi(config);
             const addressId = yield this.createAddressForMailpieces();
             const postcardData = {
                 to: addressId,
@@ -225,7 +225,7 @@ class App {
         }));
         router.get("/us_verifications", (req, res) => __awaiter(this, void 0, void 0, function* () {
             // verify a US address
-            const UsVerifications = new lob_sdk_ts_1.USVerificationsApi(av_config);
+            const UsVerifications = new lob_typescript_sdk_1.USVerificationsApi(av_config);
             const verificationData1 = {
                 primary_line: "001 CEMETERY LANE",
                 city: "WESTFIELD",
@@ -256,7 +256,7 @@ class App {
         }));
         router.get("/self_mailers", (req, res) => __awaiter(this, void 0, void 0, function* () {
             // create, get, list, cancel self-mailer
-            const SelfMailers = new lob_sdk_ts_1.SelfMailersApi(config);
+            const SelfMailers = new lob_typescript_sdk_1.SelfMailersApi(config);
             const addressId = yield this.createAddressForMailpieces();
             const selfMailerData = {
                 to: addressId,
@@ -283,13 +283,13 @@ class App {
         }));
         router.get("/letters", (req, res) => __awaiter(this, void 0, void 0, function* () {
             // create, get, list, cancel self-mailer
-            const Letters = new lob_sdk_ts_1.LettersApi(config);
+            const Letters = new lob_typescript_sdk_1.LettersApi(config);
             const addressId = yield this.createAddressForMailpieces();
             const letterData = {
                 to: addressId,
                 from: addressId,
                 color: true,
-                extra_service: lob_sdk_ts_1.LetterEditableExtraServiceEnum.Certified,
+                extra_service: lob_typescript_sdk_1.LetterEditableExtraServiceEnum.Certified,
                 file: "https://s3-us-west-2.amazonaws.com/public.lob.com/assets/us_letter_1pg.pdf"
             };
             try {
@@ -311,14 +311,14 @@ class App {
         }));
         router.get("/bank_accounts", (req, res) => __awaiter(this, void 0, void 0, function* () {
             // create, get, list, delete bank account
-            const BankAccounts = new lob_sdk_ts_1.BankAccountsApi(config);
+            const BankAccounts = new lob_typescript_sdk_1.BankAccountsApi(config);
             // we might need to create new valid routing and account numbers
             const bankData = {
                 description: "Test Bank Account",
                 routing_number: "322271627",
                 account_number: "123456789",
                 signatory: "Morticia Addams",
-                account_type: lob_sdk_ts_1.BankTypeEnum.Individual,
+                account_type: lob_typescript_sdk_1.BankTypeEnum.Individual,
             };
             const verify = {
                 amounts: [11, 35],
@@ -343,7 +343,7 @@ class App {
         }));
         router.get("/checks", (req, res) => __awaiter(this, void 0, void 0, function* () {
             // create, get, list, cancel check
-            const Checks = new lob_sdk_ts_1.ChecksApi(config);
+            const Checks = new lob_typescript_sdk_1.ChecksApi(config);
             const bankAccountId = yield this.createVerifiedBankAccount();
             const addressId = yield this.createAddressForMailpieces();
             const checkData = {
@@ -373,7 +373,7 @@ class App {
         router.get("/templates", (req, res) => __awaiter(this, void 0, void 0, function* () {
             var _a, _b;
             // create, get, update, list, delete template
-            const Templates = new lob_sdk_ts_1.TemplatesApi(config);
+            const Templates = new lob_typescript_sdk_1.TemplatesApi(config);
             const templateData = {
                 description: "Newer Template",
                 html: "<html>Updated HTML for {{name}}</html>",
@@ -403,7 +403,7 @@ class App {
         }));
         router.get("/template_versions", (req, res) => __awaiter(this, void 0, void 0, function* () {
             // create, get, update, list, delete template versions
-            const TemplateVersions = new lob_sdk_ts_1.TemplateVersionsApi(config);
+            const TemplateVersions = new lob_typescript_sdk_1.TemplateVersionsApi(config);
             const templateId = yield this.createTemplateForVersions();
             const templateData = {
                 description: "Newer Template",
@@ -433,16 +433,16 @@ class App {
         }));
         router.get("/intl_verifications", (req, res) => __awaiter(this, void 0, void 0, function* () {
             // verify a non-US address
-            const IntlVerifications = new lob_sdk_ts_1.IntlVerificationsApi(av_config);
+            const IntlVerifications = new lob_typescript_sdk_1.IntlVerificationsApi(av_config);
             const verificationData1 = {
                 primary_line: "370 WATER ST",
                 postal_code: "C1N 1C4",
-                country: lob_sdk_ts_1.CountryExtended.Ca,
+                country: lob_typescript_sdk_1.CountryExtended.Ca,
             };
             const verificationData2 = {
                 primary_line: "012 PLACEHOLDER ST",
                 postal_code: "F0O 8A2",
-                country: lob_sdk_ts_1.CountryExtended.Ca,
+                country: lob_typescript_sdk_1.CountryExtended.Ca,
             };
             const addressList = {
                 addresses: [verificationData1, verificationData2]
@@ -461,7 +461,7 @@ class App {
         }));
         router.get("/us_autocompletions", (req, res) => __awaiter(this, void 0, void 0, function* () {
             // autocomplete partial address data
-            const UsAutocompletions = new lob_sdk_ts_1.USAutocompletionsApi(av_config);
+            const UsAutocompletions = new lob_typescript_sdk_1.USAutocompletionsApi(av_config);
             const autocompletionData = {
                 address_prefix: "185 B",
                 city: "SAN FRANCISCO"
@@ -478,7 +478,7 @@ class App {
         }));
         router.get("/reverse_geocode_lookups", (req, res) => __awaiter(this, void 0, void 0, function* () {
             // look up a latitude and longitude
-            const ReverseGeocodeLookup = new lob_sdk_ts_1.ReverseGeocodeLookupsApi(av_config);
+            const ReverseGeocodeLookup = new lob_typescript_sdk_1.ReverseGeocodeLookupsApi(av_config);
             const coordinates = {
                 latitude: 37.777456,
                 longitude: -122.393039
@@ -495,13 +495,12 @@ class App {
         }));
         router.get("/zip_lookups", (req, res) => __awaiter(this, void 0, void 0, function* () {
             // look up a zip code
-            const ZipLookup = new lob_sdk_ts_1.ZipLookupsApi(av_config);
+            const ZipLookup = new lob_typescript_sdk_1.ZipLookupsApi(av_config);
             const zipRequest = {
                 zip_code: "07090"
             };
             try {
                 const zipLookup = yield ZipLookup.lookup(zipRequest);
-                console.log("Result of Zip Lookup: ", zipLookup);
                 res.render("zip_lookups", {
                     lookup: zipLookup
                 });
