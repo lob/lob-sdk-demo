@@ -8,10 +8,16 @@ services:
     ports:
       - "8080:8080"
 
+  static-ui:
+    build: static_ui/.
+    ports:
+      - "3117:80"
+
   typescript-demo:
     build: typescript/.
     depends_on:
       - ui
+      - static-ui
     environment:
       PORT: 5000
       LOB_API_KEY: <<REDACTED>>

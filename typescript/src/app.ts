@@ -44,6 +44,15 @@ class App {
         this.app.set("views", path.join(__dirname, "views"));
         this.app.set("view engine", "ejs");
         this.app.use(express.static(path.join(__dirname, "public")));
+        this.app.use((req: Request, res: Response, next) => {
+            console.log('cors hit');
+            // Website you wish to allow to connect
+            res.setHeader('Access-Control-Allow-Origin', 'http://localhost:1337');
+            // Pass to next layer of middleware
+            next();
+        });
+
+
       }
 
     private config(): void {
@@ -156,7 +165,7 @@ class App {
                 const getAddress : Address = await Addresses.get(createAddress.id);
                 const listAddresses : AddressList = await Addresses.list(2);
                 const deleteAddress : AddressDeletion = await Addresses.delete(createAddress.id);
-                res.statusCode(200).send({
+                res.status(200).send({
                     createdAddress: createAddress,
                     retrievedAddress: getAddress,
                     listedAddresses: listAddresses,
