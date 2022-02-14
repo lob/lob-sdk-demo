@@ -2,19 +2,75 @@
 <html>
 <%- include('shared/head') -%>
 
+<style>
+  #custom_address input{
+    display: block;
+    font-size:10px;
+    padding:4px 2px;
+    border:solid 1px #aacfe4;
+    margin:2px 0 20px 10px;
+    width: fit-content;
+}
+</style>
+
 <body>
   <%- include('shared/nav') -%>
   <div class='core-content'>
     <div class='body-wrapper'>
       <div class='body-content'>
+        <form id="custom_address">
+          <label for="primary_line">Enter address line 1: </label>
+          <input id="primary_line" type="text" name="primary_line" value="210 KING ST">
+          <label for="secondary_line">Enter address line 2 (optional): </label>
+          <input id="secondary_line" type="text" name="secondary_line" value="">
+          <label for="city">Enter city: </label>
+          <input id="city" type="text" name="city" value="SAN FRANCISCO">
+          <label for="state">Enter state: </label>
+          <input id="state" type="text" name="state" value="CA">
+          <label for="zip_code">Enter zip code: </label>
+          <input id="zip_code" type="text" name="zip_code" value="94107">
+          <input type="submit" value="OK">
+        </form>
         <a href='https://docs.lob.com/#tag/US-Verifications' target='_blank'>
           <h4>https://docs.lob.com/#tag/US-Verifications</h4>
         </a>
-        <p><strong>Single US Address Verification</strong> <pre><%- JSON.stringify(singleVerify, null, 2) %></pre></p>
-        <p><strong>Bulk US Address Verification</strong> <pre><%- JSON.stringify(bulkVerify, null, 2) %></pre></p>
+        <p id="single_verify"><strong>Single US Address Verification</strong> <pre><%- JSON.stringify(singleVerify, null, 2) %></pre></p>
+        <p id="bulk_verify"><strong>Bulk US Address Verification</strong> <pre><%- JSON.stringify(bulkVerify, null, 2) %></pre></p>
       </div>
     </div>
   </div>
 </body>
+
+<script> var exports = {}; </script>
+<script type="text/typescript" src="/us_verifications_api"></script>
+<script type="text/typescript" src="/configuration"></script>
+<script type="js">
+  async function makeRequest(formData) {
+    console.log("INSIDE MAKE REQUEST");
+    const av_config = new Configuration({
+      username: process.env.LIVE_KEY
+    });
+    const UsVerifications = new USVerificationsApi(av_config);
+    const verificationData = {
+        primary_line: formData.get("primary_line"),
+        secondary_line: formData.get("secondary_line"),
+        city: formData.get("city"),
+        state: formData.get("state"),
+        zip_code: formData.get("zip_code"),
+    };
+    console.log("ABOUT TO SEND TO SDK");
+    const singleVerify = await UsVerifications.verifySingle(verificationData);
+    console.log("SENT TO SDK");
+    $("#single_verify").html(JSON.stringify(singleVerify, null, 2));
+  }
+  $("#custom_address").submit(async function( event ) {
+    let data = e.formData;
+    <!-- await axios.post(us verifications route in app.ts) -->
+    await Promise.resolve(makeRequest(formData));
+    event.preventDefault();
+  });
+</script>
+<script type="text/javascript" src="/typescript.min.js"></script>
+<script type="text/javascript" src="/typescript.compile.js"></script>
 
 </html>

@@ -24,7 +24,7 @@ import {
         USAutocompletionsApi, UsAutocompletionsWritable,
         UsVerification, UsVerifications, USVerificationsApi, UsVerificationsWritable, MultipleComponentsList,
         ZipLookupsApi, Zip, ZipEditable
-    } from "lob-sdk-ts";
+    } from "@lob/lob-typescript-sdk";
 
 const config: Configuration = new Configuration({
     username: process.env.API_KEY
@@ -44,13 +44,13 @@ class App {
         this.app.set("views", path.join(__dirname, "views"));
         this.app.set("view engine", "ejs");
         this.app.use(express.static(path.join(__dirname, "public")));
-      }
+    }
 
     private config(): void {
         this.app.use(bodyParser.urlencoded({ extended: false }));
         this.app.use('/webhooks', bodyParser.raw({ type: 'application/json' }));
         this.app.use(bodyParser.json());
-      }
+    }
 
     private async createAddressForMailpieces(): Promise<string> {
         const addressData : AddressEditable = {
@@ -150,7 +150,29 @@ class App {
               });
             }
           });
-    
+
+        router.get("/verificationForm.js",function(req,res) {
+            console.log("PATH BEING JOINED", path.join(__dirname + "/views/scripts/verificationForm.js"));
+            res.sendFile(path.resolve(__dirname, "views", "scripts", "verificationForm.js")); 
+        });
+
+        router.get("/configuration", function(req, res) {
+            res.sendFile(path.resolve(__dirname, "..", "node_modules", "@lob", "lob-typescript-sdk", "dist", "configuration.d.ts"));
+        })
+        
+        router.get("/us_verifications_api", function(req, res) {
+            res.sendFile(path.resolve(__dirname, "..", "node_modules", "@lob", "lob-typescript-sdk", "dist", "api", "usverifications-api.d.ts"));
+            // /Users/aditi-ramaswamy/Workspace/lob-typescript-demo/node_modules/@lob/lob-typescript-sdk/dist/api/usverifications-api.d.ts
+        })
+
+        router.get("/typescript.min.js",function(req,res) {
+            res.sendFile(path.resolve(__dirname, "views", "scripts", "typescript-compile", "typescript.min.js")); 
+        });
+        
+        router.get("/typescript.compile.js",function(req,res) {
+            res.sendFile(path.resolve(__dirname, "views", "scripts", "typescript-compile", "typescript.compile.js")); 
+        });
+
         router.get("/addresses", async (req: Request, res: Response) => {
             // create, get, list, delete address
             const Addresses = new AddressesApi(config);
@@ -228,7 +250,7 @@ class App {
             try {
                 const singleVerified : UsVerification = await UsVerifications.verifySingle(verificationData1);
                 const bulkVerified : UsVerifications = await UsVerifications.verifyBulk(addressList);
-                console.log(bulkVerified);
+                console.log("YOLO", bulkVerified);
                 res.render("./us_verifications", {
                     singleVerify: singleVerified,
                     bulkVerify: bulkVerified
