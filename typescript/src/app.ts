@@ -5,6 +5,7 @@ import { create } from "domain";
 import express from "express";
 import { Request, Response } from "express";
 import * as fs from "fs";
+import cors from "cors";
 
 const session = require("express-session");
 var FileStore = require('session-file-store')(session);
@@ -39,20 +40,28 @@ class App {
 
     constructor() {
         this.app = express();
+        const router = express.Router();
+
         this.config();
-        this.routes();
-        this.app.set("views", path.join(__dirname, "views"));
-        this.app.set("view engine", "ejs");
-        this.app.use(express.static(path.join(__dirname, "public")));
-        this.app.use((req: Request, res: Response, next) => {
-            console.log('cors hit');
-            // Website you wish to allow to connect
-            res.setHeader('Access-Control-Allow-Origin', 'http://localhost:1337');
-            // Pass to next layer of middleware
-            next();
-        });
+        this.routes(router);
 
-
+        const fileStoreOptions = {}
+        this.app.use(cors({origin: 'http://localhost:3117' }));
+        this.app.use(session({
+            secret: "dummy secret",
+            store: new FileStore(fileStoreOptions),
+            resave: false,
+            saveUninitialized: false,
+            cookie: { secure: false },
+        }));
+        this.app.use("/", router);
+        // this.app.use((req: Request, res: Response, next) => {
+        //     console.log('cors hit');
+        //     // Website you wish to allow to connect
+        //     res.setHeader('Access-Control-Allow-Origin', 'http://localhost:1337');
+        //     // Pass to next layer of middleware
+        //     next();
+        // });
       }
 
     private config(): void {
@@ -145,11 +154,20 @@ class App {
         return id;
     }
 
-    private routes(): void {
-        const router = express.Router();
-    
+    private routes(router: express.Router): void {
+
+        router.get("/healthCheck", async (req: Request, res: Response) => {
+            try {
+                res.status(200).send({
+                    ok: true
+                });
+            } catch (err: any) {
+                // console.error(err);
+                res.status(500).send();
+            }
+        });
+
         router.get("/addresses", async (req: Request, res: Response) => {
-            console.log('hit');
             // create, get, list, delete address
             const Addresses = new AddressesApi(config);
             const addressData : AddressEditable = {
@@ -172,7 +190,8 @@ class App {
                     deletedAddress: deleteAddress
                 });
             } catch (err: any) {
-                console.error(err);
+                // console.error(err);
+                res.status(500).send();
             }
         });
 
@@ -495,18 +514,6 @@ class App {
                 console.error(err);
             }
         });
-    
-        const fileStoreOptions = {}
-
-        this.app.use(session({
-          secret: "dummy secret",
-          store: new FileStore(fileStoreOptions),
-          resave: false,
-          saveUninitialized: false,
-          cookie: { secure: false },
-        }));
-    
-        this.app.use("/", router);
     }
 }
 

@@ -16,7 +16,6 @@ services:
   typescript-demo:
     build: typescript/.
     depends_on:
-      - ui
       - static-ui
     environment:
       PORT: 5000

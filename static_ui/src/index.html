@@ -84,7 +84,7 @@
                 $('#' + e.target.getAttribute('data-api')).toggleClass("open-nav");
                 e.stopPropagation();
             });
-
+            axios.get('http://localhost:5000/healthCheck')
 
         });
     </script>
