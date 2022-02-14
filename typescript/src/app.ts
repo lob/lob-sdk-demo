@@ -167,16 +167,10 @@ class App {
             }
         });
 
-        router.get("/addresses", async (req: Request, res: Response) => {
+        router.post("/addresses", async (req: Request, res: Response) => {
             // create, get, list, delete address
             const Addresses = new AddressesApi(config);
-            const addressData : AddressEditable = {
-                name: "Thing T. Thing",
-                address_line1: "1313 CEMETERY LN",
-                address_city: "WESTFIELD",
-                address_state: "NJ",
-                address_zip: "07000",
-            };
+            const addressData : AddressEditable = req.body;
             try {
                 // only create is assigned to a new object, as 
                 const createAddress : Address = await Addresses.create(addressData);
@@ -190,29 +184,30 @@ class App {
                     deletedAddress: deleteAddress
                 });
             } catch (err: any) {
-                // console.error(err);
+                console.error(err);
                 res.status(500).send();
             }
         });
 
-        router.get("/postcards", async (req: Request, res: Response) => {
+        router.post("/postcards", async (req: Request, res: Response) => {
+            const postCard = req.body;
             // create, get, list, cancel postcard
-            const Postcards = new PostcardsApi(config);
+            const postcardsApi = new PostcardsApi(config);
             const addressId = await this.createAddressForMailpieces();
-            const postcardData : PostcardEditable = {
-                to: addressId,
-                from: addressId,
-                front:
-                "https://s3-us-west-2.amazonaws.com/public.lob.com/assets/templates/4x6_pc_template.pdf",
-                back: "https://s3-us-west-2.amazonaws.com/public.lob.com/assets/templates/4x6_pc_template.pdf"
-            }
+            // const postcardData : PostcardEditable = {
+            //     to: addressId,
+            //     from: addressId,
+            //     front:
+            //     "https://s3-us-west-2.amazonaws.com/public.lob.com/assets/templates/4x6_pc_template.pdf",
+            //     back: "https://s3-us-west-2.amazonaws.com/public.lob.com/assets/templates/4x6_pc_template.pdf"
+            // }
             try {
                 // only create is assigned to a new object, as 
-                const createPostcard : Postcard = await Postcards.create(postcardData);
-                const getPostcard : Postcard = await Postcards.get(createPostcard.id);
-                const listPostcard : PostcardList = await Postcards.list(2);
-                const cancelPostcard : PostcardDeletion = await Postcards.cancel(createPostcard.id);
-                res.render("postcards", {
+                const createPostcard : Postcard = await postcardsApi.create(postCard);
+                const getPostcard : Postcard = await postcardsApi.get(createPostcard.id);
+                const listPostcard : PostcardList = await postcardsApi.list(2);
+                const cancelPostcard : PostcardDeletion = await postcardsApi.cancel(createPostcard.id);
+                res.status(200).send({
                     createdPostcard: createPostcard,
                     retrievedPostcard: getPostcard,
                     listedPostcards: listPostcard,
@@ -221,6 +216,7 @@ class App {
                 await this.deleteAddress(addressId);
             } catch (err: any) {
                 console.error(err);
+                res.status(500).send();
             }
         });
 

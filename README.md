@@ -2,12 +2,17 @@
 An app which demonstrates the usage of Lob's Typescript SDK.
 
 
-Launch The UI
+Launch The Demo API and UI
 ```bash
-docker run --rm -v ${PWD}:/local -w /local -e API_KEY=test_a40b96f2296e226cc21a52aa4f7425392bc node:17 /bin/bash -c "npm i & npm run run-app"  
+docker compose up typescript-demo --build
 ```
 
-ToTest the Static UI
+To Launch just the Static UI
 ```bash
-docker compose up static-ui --build 
+docker compose up static-ui --build
+```
+
+To shut down a detached container, like the copy of the UI that the backend launches,
+```bash
+docker compose down static-ui
 ```

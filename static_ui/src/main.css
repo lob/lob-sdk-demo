@@ -223,6 +223,10 @@ header, nav {
     margin-left: 10px;
 }
 
+iframe#workspace {
+    height: 100%;
+}
+
 @-webkit-keyframes fadeinout {
     0%,100% { opacity: 0; height: 20px; }
     50% { opacity: 1; }

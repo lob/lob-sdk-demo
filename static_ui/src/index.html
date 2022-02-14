@@ -13,14 +13,14 @@
         <hr>
         <h4 class='api-section' data-api='pm-api'>Print & Mail API <span class='open-caret'>></span><span class='closed-caret'>^</span></h4>
         <div class='nav-section' id='pm-api'>
-            <li><div class="btn-nav" onclick="ViewController.get().handleNavigation(NavTargets.Addresses)">Addresses</div></li>
-            <li><div class="btn-nav" onclick="ViewController.get().handleNavigation(NavTargets.BankAccounts)">Bank Accounts</div></li>
-            <li><div class="btn-nav" onclick="ViewController.get().handleNavigation(NavTargets.Checks)">Checks</div></li>
-            <li><div class="btn-nav" onclick="ViewController.get().handleNavigation(NavTargets.Letters)">Letters</div></li>
-            <li><div class="btn-nav" onclick="ViewController.get().handleNavigation(NavTargets.Postcards)">Postcards</div></li>
-            <li><div class="btn-nav" onclick="ViewController.get().handleNavigation(NavTargets.SelfMailers)">Self Mailers</div></li>
-            <li><div class="btn-nav" onclick="ViewController.get().handleNavigation(NavTargets.Templates)">Templates</div></li>
-            <li><div class="btn-nav" onclick="ViewController.get().handleNavigation(NavTargets.TemplateVersions)">Template Versions</div></li>
+            <li><div class="btn-nav" onclick="handleNavigation(NavTargets.Addresses)">Addresses</div></li>
+            <li><div class="btn-nav" onclick="handleNavigation(NavTargets.BankAccounts)">Bank Accounts</div></li>
+            <li><div class="btn-nav" onclick="handleNavigation(NavTargets.Checks)">Checks</div></li>
+            <li><div class="btn-nav" onclick="handleNavigation(NavTargets.Letters)">Letters</div></li>
+            <li><div class="btn-nav" onclick="handleNavigation(NavTargets.Postcards)">Postcards</div></li>
+            <li><div class="btn-nav" onclick="handleNavigation(NavTargets.SelfMailers)">Self Mailers</div></li>
+            <li><div class="btn-nav" onclick="handleNavigation(NavTargets.Templates)">Templates</div></li>
+            <li><div class="btn-nav" onclick="handleNavigation(NavTargets.TemplateVersions)">Template Versions</div></li>
         </div>
         <hr>
 
@@ -35,57 +35,44 @@
         </div>
     </ul>
 </nav>
-
     <div class='core-content'>
-    <div class='body-wrapper'>
-        <div class='body-content'>
-            <hr>
-            <div>
-                <label>test</label><input type="test" />
-                <button class="send-btn" onClick="">send</button>
-            </div>
-            <script>
-
-            </script>
-            <hr>
-            <h4>PLACEHOLDER 1:</h4>
-                <pre>
-              <code class='language-javascript'>
-                <p> TEST PLACEHOLDER </p>
-              </code>
-            </pre>
-                <hr>
-                <h4>PLACEHOLDER 2:</h4>
-                    <pre>
-              <code class='language-javascript'>
-                <p> TEST PLACEHOLDER </p>
-              </code>
-            </pre>
-                    <hr>
-                    <h4>PLACEHOLDER 3:</h4>
-                        <pre>
-              <code class='language-javascript'>
-                <p> TEST PLACEHOLDER </p>
-              </code>
-            </pre>
-        </div>
+        <iframe src="" title="description" id="workspace"></iframe>
     </div>
-</div>
 </body>
     <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.10/highlight.min.js"></script>
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha256-4+XzXVhsDmqanXGHaHvgh1gMQKX40OUvDEBTu8JcmNs=" crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.25.0/axios.min.js" integrity="sha512-/Q6t3CASm04EliI1QyIDAA/nDo9R8FQ/BULoUFyN4n/BDdyIxeH7u++Z+eobdmr11gG5D/6nPFyDlnisDwhpYA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     <script>hljs.initHighlightingOnLoad();</script>
-    <script src="ViewController.js"></script>
     <script>
+        function handleNavigation(navTarget) {
+            document.querySelector('#workspace').src = `http://localhost:3117/${navTarget.toLowerCase()}_partial.html`
+        }
+
+        const NavTargets = {
+            Addresses: 'ADDRESSES',
+            BankAccounts: 'BANK_ACCOUNTS',
+            Checks: 'CHECKS',
+            Letters: 'LETTERS',
+            Postcards: 'CHECKS',
+            SelfMailers: 'SELF_MAILERS',
+            Templates: 'TEMPLATES',
+            TemplateVersions: 'TEMPLATE_VERSIONS',
+        };
+
         $(document).ready(() => {
             $(".api-section").click((e) => {
                 e.target.classList.toggle("checked");
                 $('#' + e.target.getAttribute('data-api')).toggleClass("open-nav");
                 e.stopPropagation();
             });
-            axios.get('http://localhost:5000/healthCheck')
 
+            axios.get(`http://localhost:5000/healthCheck`)
+                .then((resp) => {
+                    console.log(resp.body);
+                })
+                .catch((err) => {
+                    console.error(err);
+                });
         });
     </script>
 </html>
