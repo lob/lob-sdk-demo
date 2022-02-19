@@ -52,7 +52,7 @@ class App {
             store: new FileStore(fileStoreOptions),
             resave: false,
             saveUninitialized: false,
-            cookie: { secure: false },
+            cookie: { secure: true },
         }));
         this.app.use("/", router);
         // this.app.use((req: Request, res: Response, next) => {
