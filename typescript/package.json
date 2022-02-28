@@ -7,6 +7,7 @@
   "main": "dist/server.js",
   "devDependencies": {
     "@types/body-parser": "^1.19.2",
+    "@types/cors": "^2.8.12",
     "@types/express": "^4.17.13",
     "@types/node": "^17.0.13",
     "nodemon": "^2.0.15",
@@ -15,20 +16,19 @@
   },
   "dependencies": {
     "body-parser": "^1.19.1",
+    "cors": "^2.8.5",
     "dotenv": "^14.3.2",
     "ejs": "^3.1.6",
     "express": "^4.17.2",
     "express-session": "^1.17.2",
     "fs-extra": "^10.0.0",
     "lob": "^6.5.5",
-    "lob-sdk-ts": "file:../SdkGeneration/sdks_openapi_gen/sdks/lob-sdk-ts",
+    "@lob/lob-typescript-sdk": "0.0.1",
     "session-file-store": "^1.5.0"
   },
   "scripts": {
     "build-ts": "node ./utils/build.cjs",
-    "postinstall": "npm run build-ts",
     "lint": "tslint --project \"tsconfig.json\"",
-    "start-dev": "nodemon --config nodemon.json --inspect-brk src/server.ts",
-    "run-app": "npm run build-ts && npm run start-dev"
+    "start": "nodemon --config nodemon.json --inspect-brk src/server.ts"
   }
 }

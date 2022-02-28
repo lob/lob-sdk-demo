@@ -5,6 +5,7 @@ import { create } from "domain";
 import express from "express";
 import { Request, Response } from "express";
 import * as fs from "fs";
+import cors from "cors";
 
 const session = require("express-session");
 var FileStore = require('session-file-store')(session);
@@ -24,14 +25,14 @@ import {
         USAutocompletionsApi, UsAutocompletionsWritable,
         UsVerification, UsVerifications, USVerificationsApi, UsVerificationsWritable, MultipleComponentsList,
         ZipLookupsApi, Zip, ZipEditable
-    } from "lob-sdk-ts";
+    } from "@lob/lob-typescript-sdk";
 
 const config: Configuration = new Configuration({
-    username: process.env.API_KEY
+    username: process.env.LOB_API_KEY
 });
 
 const av_config: Configuration = new Configuration({
-    username: process.env.LIVE_KEY
+    username: process.env.LOB_API_KEY
 });
 
 class App {
@@ -39,11 +40,28 @@ class App {
 
     constructor() {
         this.app = express();
+        const router = express.Router();
+
         this.config();
-        this.routes();
-        this.app.set("views", path.join(__dirname, "views"));
-        this.app.set("view engine", "ejs");
-        this.app.use(express.static(path.join(__dirname, "public")));
+        this.routes(router);
+
+        const fileStoreOptions = {}
+        this.app.use(cors({origin: 'http://localhost:3117' }));
+        this.app.use(session({
+            secret: "dummy secret",
+            store: new FileStore(fileStoreOptions),
+            resave: false,
+            saveUninitialized: false,
+            cookie: { secure: true },
+        }));
+        this.app.use("/", router);
+        // this.app.use((req: Request, res: Response, next) => {
+        //     console.log('cors hit');
+        //     // Website you wish to allow to connect
+        //     res.setHeader('Access-Control-Allow-Origin', 'http://localhost:1337');
+        //     // Pass to next layer of middleware
+        //     next();
+        // });
       }
 
     private config(): void {
@@ -136,38 +154,30 @@ class App {
         return id;
     }
 
-    private routes(): void {
-        const router = express.Router();
+    private routes(router: express.Router): void {
 
-        router.get("/", async (req: Request, res: Response) => {
-      
+        router.get("/healthCheck", async (req: Request, res: Response) => {
             try {
-              res.render("./home");
-            } catch (e) {
-              res.status(res.statusCode);
-              res.render("./shared/error", {
-                error: e
-              });
+                res.status(200).send({
+                    ok: true
+                });
+            } catch (err: any) {
+                // console.error(err);
+                res.status(500).send();
             }
-          });
-    
-        router.get("/addresses", async (req: Request, res: Response) => {
+        });
+
+        router.post("/addresses", async (req: Request, res: Response) => {
             // create, get, list, delete address
             const Addresses = new AddressesApi(config);
-            const addressData : AddressEditable = {
-                name: "Thing T. Thing",
-                address_line1: "1313 CEMETERY LN",
-                address_city: "WESTFIELD",
-                address_state: "NJ",
-                address_zip: "07000",
-            };
+            const addressData : AddressEditable = req.body;
             try {
                 // only create is assigned to a new object, as 
                 const createAddress : Address = await Addresses.create(addressData);
                 const getAddress : Address = await Addresses.get(createAddress.id);
                 const listAddresses : AddressList = await Addresses.list(2);
                 const deleteAddress : AddressDeletion = await Addresses.delete(createAddress.id);
-                res.render("./addresses", {
+                res.status(200).send({
                     createdAddress: createAddress,
                     retrievedAddress: getAddress,
                     listedAddresses: listAddresses,
@@ -175,27 +185,29 @@ class App {
                 });
             } catch (err: any) {
                 console.error(err);
+                res.status(500).send();
             }
         });
 
-        router.get("/postcards", async (req: Request, res: Response) => {
+        router.post("/postcards", async (req: Request, res: Response) => {
+            const postCard = req.body;
             // create, get, list, cancel postcard
-            const Postcards = new PostcardsApi(config);
+            const postcardsApi = new PostcardsApi(config);
             const addressId = await this.createAddressForMailpieces();
-            const postcardData : PostcardEditable = {
-                to: addressId,
-                from: addressId,
-                front:
-                "https://s3-us-west-2.amazonaws.com/public.lob.com/assets/templates/4x6_pc_template.pdf",
-                back: "https://s3-us-west-2.amazonaws.com/public.lob.com/assets/templates/4x6_pc_template.pdf"
-            }
+            // const postcardData : PostcardEditable = {
+            //     to: addressId,
+            //     from: addressId,
+            //     front:
+            //     "https://s3-us-west-2.amazonaws.com/public.lob.com/assets/templates/4x6_pc_template.pdf",
+            //     back: "https://s3-us-west-2.amazonaws.com/public.lob.com/assets/templates/4x6_pc_template.pdf"
+            // }
             try {
                 // only create is assigned to a new object, as 
-                const createPostcard : Postcard = await Postcards.create(postcardData);
-                const getPostcard : Postcard = await Postcards.get(createPostcard.id);
-                const listPostcard : PostcardList = await Postcards.list(2);
-                const cancelPostcard : PostcardDeletion = await Postcards.cancel(createPostcard.id);
-                res.render("postcards", {
+                const createPostcard : Postcard = await postcardsApi.create(postCard);
+                const getPostcard : Postcard = await postcardsApi.get(createPostcard.id);
+                const listPostcard : PostcardList = await postcardsApi.list(2);
+                const cancelPostcard : PostcardDeletion = await postcardsApi.cancel(createPostcard.id);
+                res.status(200).send({
                     createdPostcard: createPostcard,
                     retrievedPostcard: getPostcard,
                     listedPostcards: listPostcard,
@@ -204,6 +216,7 @@ class App {
                 await this.deleteAddress(addressId);
             } catch (err: any) {
                 console.error(err);
+                res.status(500).send();
             }
         });
 
@@ -497,18 +510,6 @@ class App {
                 console.error(err);
             }
         });
-    
-        const fileStoreOptions = {}
-
-        this.app.use(session({
-          secret: "dummy secret",
-          store: new FileStore(fileStoreOptions),
-          resave: false,
-          saveUninitialized: false,
-          cookie: { secure: false },
-        }));
-    
-        this.app.use("/", router);
     }
 }
 
