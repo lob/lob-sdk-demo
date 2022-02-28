@@ -23,8 +23,8 @@ import {
         SelfMailer, SelfMailerList, SelfMailerDeletion, SelfMailersApi, SelfMailerEditable,
         TemplatesApi, TemplateWritable, TemplateUpdate, TemplateVersionWritable, TemplateVersionUpdatable, TemplateVersionsApi,
         USAutocompletionsApi, UsAutocompletionsWritable,
-        UsVerification, UsVerifications, USVerificationsApi, UsVerificationsWritable, MultipleComponentsList,
-        ZipLookupsApi, Zip, ZipEditable
+        UsVerification, UsVerifications, USVerificationsApi, UsVerificationsWritable, MultipleComponentsList, MultipleComponents,
+        ZipLookupsApi, Zip, ZipEditable, MultipleComponentsIntl
     } from "@lob/lob-typescript-sdk";
 
 const config: Configuration = new Configuration({
@@ -52,7 +52,7 @@ class App {
             store: new FileStore(fileStoreOptions),
             resave: false,
             saveUninitialized: false,
-            cookie: { secure: true },
+            cookie: { secure: true}
         }));
         this.app.use("/", router);
         // this.app.use((req: Request, res: Response, next) => {
@@ -76,7 +76,7 @@ class App {
             address_line1: "1313 CEMETERY LN",
             address_city: "WESTFIELD",
             address_state: "NJ",
-            address_zip: "07090",
+            address_zip: "07090"
         };
         let id = "";
         try {
@@ -95,7 +95,7 @@ class App {
     private async createTemplateForVersions(): Promise<string> {
         const templateData: TemplateWritable = {
             description: "Newer Template",
-            html: "<html>Updated HTML for {{name}}</html>",
+            html: "<html>Updated HTML for {{name}}</html>"
         };
         let id = "";
         try {
@@ -138,10 +138,10 @@ class App {
             routing_number: "322271627",
             account_number: "123456789",
             signatory: "Gomez Addams",
-            account_type: BankTypeEnum.Individual,
+            account_type: BankTypeEnum.Individual
         };
         const verificationData: BankAccountVerify = {
-          amounts: [11, 35],
+          amounts: [11, 35]
         };
         let id = "";
         try {
@@ -170,7 +170,7 @@ class App {
         router.post("/addresses", async (req: Request, res: Response) => {
             // create, get, list, delete address
             const Addresses = new AddressesApi(config);
-            const addressData : AddressEditable = req.body;
+            const addressData = new AddressEditable(req.body);
             try {
                 // only create is assigned to a new object, as 
                 const createAddress : Address = await Addresses.create(addressData);
@@ -219,57 +219,63 @@ class App {
                 res.status(500).send();
             }
         });
-
+//DONE**
         router.get("/us_verifications", async (req: Request, res: Response) => {
             // verify a US address
-            const UsVerifications = new USVerificationsApi(av_config);
-            const verificationData1: UsVerificationsWritable = {
-                primary_line: "001 CEMETERY LANE",
-                city: "WESTFIELD",
-                state: "NJ",
-                zip_code: "07090",
-            };
-            const verificationData2: UsVerificationsWritable = {
+           const UsVerifications = new USVerificationsApi(av_config);
+           let verificationData1: UsVerificationsWritable = {  
+               primary_line: "001 CEMETERY LANE",
+               city: "WESTFIELD",
+               state: "NJ",
+               zip_code: "07090"
+             };
+             const verificationData2: UsVerificationsWritable = {
                 primary_line: "1515 CEMETERY LN",
                 city: "WESTFIELD",
                 state: "NJ",
-                zip_code: "07090",
+                zip_code: "07090"
             };
-            const addressList: MultipleComponentsList = {
-                addresses: [verificationData1, verificationData2]
-            }
+            let addressList = new MultipleComponentsList ({
+            addresses: [verificationData1, verificationData2]
+            });
+           if (req.body.addresses) {
+            addressList = new MultipleComponentsList (req.body);
+           } else {
+               verificationData1 = new MultipleComponents(req.body);
+           }
             try {
                 const singleVerified : UsVerification = await UsVerifications.verifySingle(verificationData1);
                 const bulkVerified : UsVerifications = await UsVerifications.verifyBulk(addressList);
-                console.log(bulkVerified);
-                res.render("./us_verifications", {
+                res.status(200).send({
                     singleVerify: singleVerified,
                     bulkVerify: bulkVerified
                 });
             } catch (err: any) {
                 console.error(err);
+                res.status(500).send();
             }
         });
-
+//Done*
         router.get("/self_mailers", async (req: Request, res: Response) => {
             // create, get, list, cancel self-mailer
             const SelfMailers = new SelfMailersApi(config);
             const addressId = await this.createAddressForMailpieces();
-            const selfMailerData : SelfMailerEditable = {
-                to: addressId,
-                from: addressId,
-                inside:
-                    "https://s3.us-west-2.amazonaws.com/public.lob.com/assets/templates/self_mailers/6x18_sfm_inside.pdf",
-                outside:
-                    "https://s3.us-west-2.amazonaws.com/public.lob.com/assets/templates/self_mailers/6x18_sfm_outside.pdf"
-            }
+            const selfMailerData = new SelfMailerEditable(req.body);
+            // const selfMailerData : SelfMailerEditable = {
+            //    to: addressId,
+            //     from: addressId,
+            //     inside:
+            //         "https://s3.us-west-2.amazonaws.com/public.lob.com/assets/templates/self_mailers/6x18_sfm_inside.pdf",
+            //     outside:
+            //         "https://s3.us-west-2.amazonaws.com/public.lob.com/assets/templates/self_mailers/6x18_sfm_outside.pdf"
+            // }
 
             try {
                 const createSelfMailer : SelfMailer = await SelfMailers.create(selfMailerData);
                 const getSelfMailer : SelfMailer = await SelfMailers.get(createSelfMailer.id);
                 const listSelfMailer : SelfMailerList = await SelfMailers.list(2);
                 const deleteSelfMailer : SelfMailerDeletion = await SelfMailers.delete(createSelfMailer.id);
-                res.render("self_mailers", {
+                res.status(200).send({
                     createdSelfMailer: createSelfMailer,
                     retrievedSelfMailer: getSelfMailer,
                     listedSelfMailers: listSelfMailer,
@@ -278,27 +284,29 @@ class App {
                 await this.deleteAddress(addressId);
             } catch (err: any) {
                 console.error(err);
+                res.status(500).send();
             }
         });
-
+//Done*
         router.get("/letters", async (req: Request, res: Response) => {
             // create, get, list, cancel self-mailer
             const Letters = new LettersApi(config);
             const addressId = await this.createAddressForMailpieces();
-            const letterData : LetterEditable = {
-                to: addressId,
-                from: addressId,
-                color: true,
-                extra_service: LetterEditableExtraServiceEnum.Certified,
-                file: "https://s3-us-west-2.amazonaws.com/public.lob.com/assets/us_letter_1pg.pdf"
-            }
+            const letterData = new LetterEditable(req.body);
+            // const letterData : LetterEditable = {
+            //     to: addressId,
+            //     from: addressId,
+            //     color: true,
+              // extra_service: LetterEditableExtraServiceEnum.Certified,
+            //     file: "https://s3-us-west-2.amazonaws.com/public.lob.com/assets/us_letter_1pg.pdf"
+            // }
 
             try {
                 const createLetter : Letter = await Letters.create(letterData);
                 const getLetter : Letter = await Letters.get(createLetter.id);
                 const listLetters : LetterList = await Letters.list(2);
                 const deleteLetter : LetterDeletion = await Letters.cancel(createLetter.id);
-                res.render("letters", {
+                res.status(200).send({
                     createdLetter: createLetter,
                     retrievedLetter: getLetter,
                     listedLetters: listLetters,
@@ -307,23 +315,39 @@ class App {
                 await this.deleteAddress(addressId);
             } catch (err: any) {
                 console.error(err);
+                res.status(500).send();
             }
         });
+//Done*
 
         router.get("/bank_accounts", async (req: Request, res: Response) => {
             // create, get, list, delete bank account
             const BankAccounts = new BankAccountsApi(config);
-            // we might need to create new valid routing and account numbers
-            const bankData: BankAccountWritable = {
+            let bankData = new BankAccountWritable({
                 description: "Test Bank Account",
                 routing_number: "322271627",
                 account_number: "123456789",
-                signatory: "Morticia Addams",
-                account_type: BankTypeEnum.Individual,
-            };
-            const verify: BankAccountVerify = {
-              amounts: [11, 35],
-            };
+                signatory: "Gomez Addams",
+             account_type: BankTypeEnum.Individual
+            });
+            let verify = new BankAccountVerify({amounts: [11, 35]});
+
+            if (req.body.amounts === undefined) {
+               bankData = new BankAccountWritable(req.body); 
+             } else {
+                verify = new BankAccountVerify(req.body);
+            }
+            // // we might need to create new valid routing and account numbers
+            // const bankData: BankAccountWritable = {
+            //     description: "Test Bank Account",
+            //     routing_number: "322271627",
+            //     account_number: "123456789",
+            //     signatory: "Morticia Addams",
+            //  account_type: BankTypeEnum.Individual,
+            // };
+            // const verify: BankAccountVerify = {
+            //   amounts: [11, 35],
+            //  };
 
             try {
                 const createBankAccount = await BankAccounts.create(bankData);
@@ -331,7 +355,7 @@ class App {
                 const getBankAccount = await BankAccounts.get(createBankAccount.id);
                 const listBankAccounts = await BankAccounts.list(2);
                 const deleteBankAccount = await BankAccounts.delete(createBankAccount.id);
-                res.render("bank_accounts", {
+                res.status(200).send({
                     createdAccount: createBankAccount,
                     verifiedAccount: verifyBankAccount,
                     retrievedAccount: getBankAccount,
@@ -340,26 +364,28 @@ class App {
                 });
             } catch (err: any) {
                 console.error(err);
+                res.status(500).send();
             }
         });
-
+//Done*
         router.get("/checks", async (req: Request, res: Response) => {
             // create, get, list, cancel check
             const Checks = new ChecksApi(config);
             const bankAccountId = await this.createVerifiedBankAccount();
             const addressId = await this.createAddressForMailpieces();
-            const checkData : CheckEditable = {
-                to: addressId,
-                from: addressId,
-                bank_account: bankAccountId,
-                amount: 100
-            }
+            const checkData = new CheckEditable(req.body);
+            // const checkData : CheckEditable = {
+            //     to: addressId,
+            //     from: addressId,
+            //     bank_account: bankAccountId,
+            //     amount: 100
+            // }
             try {
                 const createCheck = await Checks.create(checkData);
                 const getCheck = await Checks.get(createCheck.id);
                 const listChecks = await Checks.list(2);
                 const deleteCheck = await Checks.cancel(createCheck.id);
-                res.render("checks", {
+                res.status(200).send({
                     createdCheck: createCheck,
                     retrievedCheck: getCheck,
                     listedChecks: listChecks,
@@ -369,28 +395,37 @@ class App {
                 await this.deleteBankAccount(bankAccountId);
             } catch (err: any) {
                 console.error(err);
+                res.status(500).send();
             }
         });
-
+//Done*
+//Should update be in a seperate function ?
         router.get("/templates", async (req: Request, res: Response) => {
             // create, get, update, list, delete template
             const Templates = new TemplatesApi(config);
-            const templateData: TemplateWritable = {
+            let templateData = new TemplateWritable({
                 description: "Newer Template",
-                html: "<html>Updated HTML for {{name}}</html>",
-            };
+                html: "<html>Updated HTML for {{name}}</html>"
+            });
+            
+            if (req.body.html) {
+                templateData = new TemplateWritable(req.body);
+            }
             try {
                 const createTemplate = await Templates.create(templateData);
                 console.log("published version: ", createTemplate.published_version?.id);
                 const getTemplate = await Templates.get(createTemplate.id);
                 const listTemplates = await Templates.list(2);
-                const updateData: TemplateUpdate = {
+                let updateData = new TemplateUpdate({
                     description: "updated template",
-                    published_version: createTemplate.published_version?.id as string
+                    publishedVersion: createTemplate.published_version?.id as string
+                });
+                if (req.body.published_Version){
+                    updateData = new TemplateUpdate(req.body)
                 }
                 const updateTemplate = await Templates.update(createTemplate.id, updateData);
                 const deleteTemplate = await Templates.delete(createTemplate.id);
-                res.render("templates", {
+                res.status(200).send({
                     createdTemplate: createTemplate,
                     retrievedTemplate: getTemplate,
                     listedTemplates: listTemplates,
@@ -399,27 +434,35 @@ class App {
                 });
             } catch (err: any) {
                 console.error(err);
+                res.status(500).send()
             }
         });
-
+//Done*
         router.get("/template_versions", async (req: Request, res: Response) => {
             // create, get, update, list, delete template versions
             const TemplateVersions = new TemplateVersionsApi(config);
             const templateId = await this.createTemplateForVersions();
-            const templateData: TemplateVersionWritable = {
+            let templateData = new TemplateVersionWritable({
                 description: "Newer Template",
-                html: "<html>Updated HTML for {{name}}</html>",
-            };
+                html: "<html>Updated HTML for {{name}}</html>"
+            });
+            if (req.body.html) {
+                templateData = new TemplateWritable(req.body);
+            }
             try {
                 const createTemplateVersion = await TemplateVersions.create(templateId, templateData);
                 const getTemplateVersion = await TemplateVersions.get(templateId, createTemplateVersion.id);
                 const listTemplateVersions = await TemplateVersions.list(templateId);
-                const updateData: TemplateVersionUpdatable = {
-                    description: "updated template version",
+                let updateData = new TemplateVersionUpdatable({
+                    description: "updated template version"
+                    //Should engine be here?
+                });
+                if (req.body.engine) {
+                    updateData = new TemplateVersionUpdatable(req.body)
                 }
                 const updateTemplateVersion = await TemplateVersions.update(templateId, createTemplateVersion.id, updateData);
                 const deleteTemplateVersion = await TemplateVersions.delete(templateId, createTemplateVersion.id);
-                res.render("template_versions", {
+                res.status(200).send({
                     createdVersion: createTemplateVersion,
                     retrievedVersion: getTemplateVersion,
                     listedVersions: listTemplateVersions,
@@ -429,85 +472,100 @@ class App {
                 this.deleteTemplate(templateId);
             } catch (err: any) {
                 console.error(err);
+                res.status(500).send();
             }
         });
-
+//DONE*
         router.get("/intl_verifications", async (req: Request, res: Response) => {
             // verify a non-US address
             const IntlVerifications = new IntlVerificationsApi(av_config);
-            const verificationData1: IntlVerificationWritable = {
+            let verificationData1: IntlVerificationWritable = {
                 primary_line: "370 WATER ST",
                 postal_code: "C1N 1C4",
-                country: CountryExtended.Ca,
+                country: CountryExtended.Ca
             };
             const verificationData2: IntlVerificationWritable = {
                 primary_line: "012 PLACEHOLDER ST",
                 postal_code: "F0O 8A2",
-                country: CountryExtended.Ca,
+                country: CountryExtended.Ca
             };
-            const addressList: IntlVerificationsPayload = {
+            let addressList = new IntlVerificationsPayload({
                 addresses: [verificationData1, verificationData2]
-            }
+            });
+            if (req.body.addresses) {
+                addressList = new IntlVerificationsPayload(req.body);
+               } else {
+                   verificationData1 = new MultipleComponentsIntl(req.body);
+               }
             try {
                 const singleVerified = await IntlVerifications.verifySingle(verificationData1);
                 const bulkVerified = await IntlVerifications.verifyBulk(addressList);
-                res.render("intl_verifications", {
+                res.status(200).send({
                     singleVerify: singleVerified,
                     bulkVerify: bulkVerified
                 });
             } catch (err: any) {
                 console.error(err);
+                res.status(500).send();
             }
         });
-
+ //DONE*
         router.get("/us_autocompletions", async (req: Request, res: Response) => {
             // autocomplete partial address data
             const UsAutocompletions = new USAutocompletionsApi(av_config);
-            const autocompletionData: UsAutocompletionsWritable = {
-                address_prefix: "185 B",
-                city: "SAN FRANCISCO"
-            };
+            const autocompletionData = new UsAutocompletionsWritable(req.body);
+            // const autocompletionData: UsAutocompletionsWritable = {
+            //     address_prefix: "185 B",
+            //     city: "SAN FRANCISCO"
+            // };
             try {
                 const autocompletedAddresses = await UsAutocompletions.autocomplete(autocompletionData);
-                res.render("us_autocompletions", {
+                res.status(200).send( {
                     autocompleted: autocompletedAddresses
                 });
             } catch (err: any) {
                 console.error(err);
+                res.status(500).send();
+
             }
         });
-
+//DONE*
         router.get("/reverse_geocode_lookups", async (req: Request, res: Response) => {
             // look up a latitude and longitude
             const ReverseGeocodeLookup = new ReverseGeocodeLookupsApi(av_config);
-            const coordinates: Location = {
-                latitude: 37.777456,
-                longitude: -122.393039
-              };
+            const coordinates = new Location(req.body);
+            // const coordinates: Location = {
+            //     latitude: 37.777456,
+            //     longitude: -122.393039
+            //   };
             try {
                 const geocode = await ReverseGeocodeLookup.lookup(coordinates);
-                res.render("reverse_geocode_lookups", {
+                res.status(200).send( {
                     geocode: geocode
                 });
             } catch (err: any) {
                 console.error(err);
+                res.status(500).send();
             }
         });
-
+//DONE*
         router.get("/zip_lookups", async (req: Request, res: Response) => {
             // look up a zip code
             const ZipLookup = new ZipLookupsApi(av_config);
-            const zipRequest : ZipEditable = {
-                zip_code: "07090"
-            }
+            const zipRequest: ZipEditable = req.body;
+            // const zipRequest : ZipEditable = {
+            //     zip_code: "07090"
+            // }
+            console.log("ZIP",zipRequest)
             try {
                 const zipLookup : Zip = await ZipLookup.lookup(zipRequest);
                 console.log("Result of Zip Lookup: ", zipLookup);
-                res.render("zip_lookups", {
+                res.status(200).send({
                     lookup: zipLookup
                 });
             } catch (err: any) {
                 console.error(err);
+                res.status(500).send();
             }
         });
     }
