@@ -220,7 +220,29 @@ class App {
                     createdAddress: createAddress,
                     retrievedAddress: getAddress,
                     listedAddresses: listAddresses,
-                    deletedAddress: deleteAddress
+                   deletedAddress: deleteAddress
+                });
+            } catch (err: any) {
+                console.error(err);
+                res.status(500).send();
+            }
+        });
+        router.post("/check_addresses", async (req: Request, res: Response) => {
+            // create, get, list, delete address
+            console.log("reqAdd", req.body)
+            const Addresses = new AddressesApi(config);
+            const addressData = new AddressEditable(req.body);
+            try {
+                // only create is assigned to a new object, as 
+                const createAddress : Address = await Addresses.create(addressData);
+                const getAddress : Address = await Addresses.get(createAddress.id);
+                const listAddresses : AddressList = await Addresses.list(2);
+                //const deleteAddress : AddressDeletion = await Addresses.delete(createAddress.id);
+                res.status(200).send({
+                    createdAddress: createAddress,
+                    retrievedAddress: getAddress,
+                    listedAddresses: listAddresses,
+                   // deletedAddress: deleteAddress
                 });
             } catch (err: any) {
                 console.error(err);
@@ -229,7 +251,8 @@ class App {
         });
 
         router.post("/postcards", async (req: Request, res: Response) => {
-            const postCard = req.body;
+            console.log("PSTDATA",req.body)
+            const postcardsData = req.body;
             // create, get, list, cancel postcard
             const postcardsApi = new PostcardsApi(config);
             const addressId = await this.createAddressForMailpieces();
@@ -242,7 +265,8 @@ class App {
             // }
             try {
                 // only create is assigned to a new object, as 
-                const createPostcard : Postcard = await postcardsApi.create(postCard);
+                const createPostcard : Postcard = await postcardsApi.create(postcardsData);
+                console.log("create%Postcard", createPostcard,"&&&&&&", createPostcard.id)
                 const getPostcard : Postcard = await postcardsApi.get(createPostcard.id);
                 const listPostcard : PostcardList = await postcardsApi.list(2);
                 const cancelPostcard : PostcardDeletion = await postcardsApi.cancel(createPostcard.id);
@@ -295,7 +319,7 @@ class App {
             }
         });
 //Done*
-        router.get("/self_mailers", async (req: Request, res: Response) => {
+        router.post("/self_mailers", async (req: Request, res: Response) => {
             // create, get, list, cancel self-mailer
             const SelfMailers = new SelfMailersApi(config);
             const addressId = await this.createAddressForMailpieces();
@@ -327,7 +351,7 @@ class App {
             }
         });
 //Done*
-        router.get("/letters", async (req: Request, res: Response) => {
+        router.post("/letters", async (req: Request, res: Response) => {
             // create, get, list, cancel self-mailer
             const Letters = new LettersApi(config);
             const addressId = await this.createAddressForMailpieces();
@@ -359,7 +383,7 @@ class App {
         });
 //Done*
 
-        router.get("/bank_accounts", async (req: Request, res: Response) => {
+        router.post("/bank_accounts", async (req: Request, res: Response) => {
             // create, get, list, delete bank account
             const BankAccounts = new BankAccountsApi(config);
             let bankData = new BankAccountWritable({
@@ -371,7 +395,7 @@ class App {
             });
             let verify = new BankAccountVerify({amounts: [11, 35]});
 
-            if (req.body.amounts === undefined) {
+            if (req.params.amounts === undefined) {
                bankData = new BankAccountWritable(req.body); 
              } else {
                 verify = new BankAccountVerify(req.body);
@@ -406,13 +430,61 @@ class App {
                 res.status(500).send();
             }
         });
+        router.post("/check_bank_accounts", async (req: Request, res: Response) => {
+            // create, get, list, delete bank account
+            const BankAccounts = new BankAccountsApi(config);
+            let bankData = new BankAccountWritable({
+                description: "Test Bank Account",
+                routing_number: "322271627",
+                account_number: "123456789",
+                signatory: "Gomez Addams",
+             account_type: BankTypeEnum.Individual
+            });
+            let verify = new BankAccountVerify({amounts: [11, 35]});
+
+            if (req.params.amounts === undefined) {
+               bankData = new BankAccountWritable(req.body); 
+             } else {
+                verify = new BankAccountVerify(req.body);
+            }
+            // // we might need to create new valid routing and account numbers
+            // const bankData: BankAccountWritable = {
+            //     description: "Test Bank Account",
+            //     routing_number: "322271627",
+            //     account_number: "123456789",
+            //     signatory: "Morticia Addams",
+            //  account_type: BankTypeEnum.Individual,
+            // };
+            // const verify: BankAccountVerify = {
+            //   amounts: [11, 35],
+            //  };
+
+            try {
+                const createBankAccount = await BankAccounts.create(bankData);
+                const verifyBankAccount = await BankAccounts.verify(createBankAccount.id, verify);
+                const getBankAccount = await BankAccounts.get(createBankAccount.id);
+                const listBankAccounts = await BankAccounts.list(2);
+                //const deleteBankAccount = await BankAccounts.delete(createBankAccount.id);
+                res.status(200).send({
+                    createdAccount: createBankAccount,
+                    verifiedAccount: verifyBankAccount,
+                    retrievedAccount: getBankAccount,
+                    listedAccounts: listBankAccounts,
+                   // deletedAccount: deleteBankAccount
+                });
+            } catch (err: any) {
+                console.error(err);
+                res.status(500).send();
+            }
+        });
 //Done*
-        router.get("/checks", async (req: Request, res: Response) => {
+        router.post("/checks", async (req: Request, res: Response) => {
             // create, get, list, cancel check
             const Checks = new ChecksApi(config);
             const bankAccountId = await this.createVerifiedBankAccount();
             const addressId = await this.createAddressForMailpieces();
-            const checkData = new CheckEditable(req.body);
+            const checkData = new CheckEditable(req.body)
+            
             // const checkData : CheckEditable = {
             //     to: addressId,
             //     from: addressId,
@@ -430,16 +502,15 @@ class App {
                     listedChecks: listChecks,
                     deletedCheck: deleteCheck
                 });
-                await this.deleteAddress(addressId);
-                await this.deleteBankAccount(bankAccountId);
+                await this.deleteAddress(req.body.from);
+                await this.deleteBankAccount(req.body.bank_account);
             } catch (err: any) {
                 console.error(err);
                 res.status(500).send();
             }
         });
 //Done*
-//Should update be in a seperate function ?
-        router.get("/templates", async (req: Request, res: Response) => {
+        router.post("/templates", async (req: Request, res: Response) => {
             // create, get, update, list, delete template
             const Templates = new TemplatesApi(config);
             let templateData = new TemplateWritable({
@@ -477,7 +548,7 @@ class App {
             }
         });
 //Done*
-        router.get("/template_versions", async (req: Request, res: Response) => {
+        router.post("/template_versions", async (req: Request, res: Response) => {
             // create, get, update, list, delete template versions
             const TemplateVersions = new TemplateVersionsApi(config);
             const templateId = await this.createTemplateForVersions();

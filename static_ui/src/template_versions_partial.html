@@ -1,7 +1,7 @@
 <!doctype html>
 <html>
 <head>
-    <title>Addresses Partial</title>
+    <title>Template Version Partial</title>
     <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.10/styles/default.min.css">
     <link rel="stylesheet" href="shared_form.css">
 </head>
@@ -11,32 +11,16 @@
       <img src="Assets/200w.webp"/>
     </div> 
   </div>
-  <h2>Addresses</h2>
-   <form id="addresses_form" >
+  <h2>Template Versions</h2>
+   <form id="template_versions_form" >
     <ul class="wrapper">
       <li class="form-row">
-        <label for="name">Enter Name: </label>
-        <input id="name" type="text" name="name" value="YOUR NAME HERE">
+        <label for="description">Description: </label>
+        <input id="description" type="text" name="description" value="Newer Version">
       </li>
       <li class="form-row">
-        <label for="address_line1">Enter address line 1: </label>
-        <input id="address_line1" type="text" name="address_line1" value="210 KING ST">
-      </li>
-      <li class="form-row">
-        <label for="address_line2">Enter address line 2 (optional): </label>
-        <input id="address_line2" type="text" name="address_line2" value="">
-      </li>
-      <li class="form-row">
-        <label for="address_city">Enter city: </label>
-        <input id="address_city" type="text" name="address_city" value="SAN FRANCISCO">
-      </li>
-      <li class="form-row">
-        <label for="address_state">Enter state: </label>
-        <input id="address_state" type="text" name="address_state" value="CA">
-      </li>
-      <li class="form-row">
-        <label for="address_zip">Enter zip code: </label>
-        <input id="address_zip" type="text" name="address_zip" value="94107">
+        <label for="Version_line1">HTML: </label>
+        <input id="Version_line1" type="text" name="Version_line1" value="210 KING ST">
       </li>
       <li class="button">
         <input type="submit"  value="OK"/>
@@ -68,6 +52,12 @@
             <p> TEST PLACEHOLDER </p>
           </code>
         </pre>
+        <h4>UPDATED:</h4>
+        <pre>
+          <code class='language-javascript'>
+            <p> TEST PLACEHOLDER </p>
+          </code>
+        </pre>
 
         <h4>DELETED:</h4>
         <pre>
@@ -84,9 +74,9 @@
     <script>hljs.initHighlightingOnLoad();</script>
     <script>
         $(document).ready(() => {
-            const form = document.querySelector("#addresses_form");
+            const form = document.querySelector("#template_versions_form");
             if (!form) {
-                console.warn('Unable to find form: #addresses_form');
+                console.warn('Unable to find form: #template_versions_forms');
                 return;
             }
             form.onsubmit = async (event) => {
@@ -103,17 +93,18 @@
                     console.log("%%%", data)
                 }
 
-                axios.post(`http://localhost:5000/addresses`, data)
+                axios.post(`http://localhost:5000/template_versions`, data)
                     .then((resp) => {
                       document.getElementById("loading-overlay").classList.add("hide-overlay")
                         
                         const nodes = document.querySelectorAll("code");
                         const data = resp.data;
 
-                        nodes[0].innerText = JSON.stringify(data.createdAddress, null, 2);
-                        nodes[1].innerText = JSON.stringify(data.retrievedAddress, null, 2);
-                        nodes[2].innerText = JSON.stringify(data.listedAddresses, null, 2);
-                        nodes[3].innerText = JSON.stringify(data.deletedAddress, null, 2);
+                        nodes[0].innerText = JSON.stringify(data.createdVersion, null, 2);
+                        nodes[1].innerText = JSON.stringify(data.retrievedVersion, null, 2);
+                        nodes[2].innerText = JSON.stringify(data.listedVersions, null, 2);
+                        nodes[3].innerText = JSON.stringify(data.updatedVersion, null, 2);
+                        nodes[4].innerText = JSON.stringify(data.deletedVersion, null, 2);
                     })
                     .catch((err) => {
                       document.getElementById("loading-overlay").classList.add("hide-overlay")  

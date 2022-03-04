@@ -1,0 +1,225 @@
+<!doctype html>
+<html>
+<head>
+    <title>Checks Partial</title>
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.10/styles/default.min.css">
+    <link rel="stylesheet" href="shared_form.css">
+</head>
+<body>
+  <div class="loading-overlay hide-overlay" id="loading-overlay" style="z-index:5; opacity: 45%; width: 100vw; height: 100vh;">
+    <div class="loading-overlay-image-container  hide-gif"id="loading-overlay-image-container ">
+      <img src="Assets/200w.webp"/>
+    </div> 
+  </div>
+  <h2>Checks</h2>
+  <form id="checks_form" >
+    <ul class="wrapper">TO:
+      <li class="form-row">
+        <label for="name">Enter Name: </label>
+        <input id="name" type="text" name="rec_name" value="YOUR NAME HERE">
+      </li>
+      <li class="form-row">
+        <label for="address_line1">Enter address line 1: </label>
+        <input id="address_line1" type="text" name="rec_address_line1" value="210 KING ST">
+      </li>
+      <li class="form-row">
+        <label for="address_line2">Enter address line 2 (optional): </label>
+        <input id="address_line2" type="text" name="rec_address_line2" value="">
+      </li>
+      <li class="form-row">
+        <label for="address_city">Enter city: </label>
+        <input id="address_city" type="text" name="rec_address_city" value="SAN FRANCISCO">
+      </li>
+      <li class="form-row">
+        <label for="address_state">Enter state: </label>
+        <input id="address_state" type="text" name="rec_address_state" value="CA">
+      </li>
+      <li class="form-row">
+        <label for="address_zip">Enter zip code: </label>
+        <input id="address_zip" type="text" name="rec_address_zip" value="94107">
+      </li>
+    </ul>
+    <ul class="wrapper">FROM:
+      <li class="form-row">
+        <label for="name">Enter Name: </label>
+        <input id="name" type="text" name="send_name" value="YOUR NAME HERE">
+      </li>
+      <li class="form-row">
+        <label for="address_line1">Enter address line 1: </label>
+        <input id="address_line1" type="text" name="send_address_line1" value="210 KING ST">
+      </li>
+      <li class="form-row">
+        <label for="address_line2">Enter address line 2 (optional): </label>
+        <input id="address_line2" type="text" name="send_address_line2" value="">
+      </li>
+      <li class="form-row">
+        <label for="address_city">Enter city: </label>
+        <input id="address_city" type="text" name="send_address_city" value="SAN FRANCISCO">
+      </li>
+      <li class="form-row">
+        <label for="address_state">Enter state: </label>
+        <input id="address_state" type="text" name="send_address_state" value="CA">
+      </li>
+      <li class="form-row">
+        <label for="address_zip">Enter zip code: </label>
+        <input id="address_zip" type="text" name="send_address_zip" value="94107">
+      </li>
+    </ul>
+        <ul class="wrapper">BANK ACCOUNT:
+          <li class="form-row">
+            <label for="description">Enter Description: </label>
+            <input id="description" type="text" name="description" value="Test Bank Account">
+          </li>
+          <li class="form-row">
+            <label for="routing_number">Enter routing number: </label>
+            <input id="routing_number" type="text" name="routing_number" value="322271627">
+          </li>
+          <li class="form-row">
+            <label for="account_number">Enter account number: </label>
+            <input id="account_number" type="text" name="account_number" value="123456789">
+          </li>
+          <li class="form-row">
+            <label for="signatory">Enter signatory: </label>
+            <input id="signatory" type="text" name="signatory" value="Gomez Addams">
+          </li>
+          <li class="form-row">
+            <label for="account_type">Enter account type: </label>
+            <input id="account_type" type="text" name="account_type" value="individual">
+          </li>
+        </ul> 
+    <ul class="wrapper">AMOUNT:
+      <li class="form-row">
+        <label for="amount">Amount: </label>
+        <input id="amount" type="text" name="amount" value="100">
+      </li>
+      <li class="button">
+        <input type="submit"  value="OK"/>
+      </li>
+    </ul>
+    </form>
+
+    <hr>
+    <div>
+        <h4>CREATED:</h4>
+        <pre>
+          <code class='language-javascript'>
+            <p> TEST PLACEHOLDER </p>
+          </code>
+        </pre>
+        <hr>
+        <h4>RETRIEVED:</h4>
+        <pre>
+          <code class='language-javascript'>
+            <p> TEST PLACEHOLDER </p>
+          </code>
+        </pre>
+        <hr>
+
+        <h4>LISTED:</h4>
+        <pre>
+          <code class='language-javascript'>
+            <p> TEST PLACEHOLDER </p>
+          </code>
+        </pre>
+
+        <h4>DELETED:</h4>
+        <pre>
+          <code class='language-javascript'>
+            <p> TEST PLACEHOLDER </p>
+          </code>
+        </pre>
+    </div>
+ 
+</body>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.10/highlight.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha256-4+XzXVhsDmqanXGHaHvgh1gMQKX40OUvDEBTu8JcmNs=" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.25.0/axios.min.js" integrity="sha512-/Q6t3CASm04EliI1QyIDAA/nDo9R8FQ/BULoUFyN4n/BDdyIxeH7u++Z+eobdmr11gG5D/6nPFyDlnisDwhpYA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script>hljs.initHighlightingOnLoad();</script>
+    <script>
+        $(document).ready(() => {
+            const form = document.querySelector("#checks_form");
+            if (!form) {
+                console.warn('Unable to find form: #checks_form');
+                return;
+            }
+            form.onsubmit = async (event) => {
+                event.preventDefault();
+                event.stopPropagation();
+                document.getElementById("loading-overlay").classList.remove("hide-overlay")                 
+                
+                let data = {};
+                let rec_id = "";
+                let send_id = "";
+                let bank_id = "";
+                let checkData ={};
+
+                for (const ele of event.target ) {
+                  console.log("ele", ele.name)
+                  console.log("EvT", event.target)
+                    if (!ele.name || !ele.value) {
+                        continue;
+                    }
+                    console.log()
+                    data = Object.assign({}, data, { [ele.name]: ele.value });
+                    console.log("$$$$", data)
+                }
+                axios.post(`http://localhost:5000/check_addresses`, {
+                name:data.rec_name,
+                address_line1:data.rec_address_line1,
+                address_line2:data.rec_address_line2,
+                address_city:data.rec_address_city,
+                address_state:data.rec_address_state,
+                address_zip:data.rec_address_zip
+                })
+                .then((resp) =>{
+                    rec_id = resp.data.createdAddress._id;
+                    axios.post(`http://localhost:5000/check_addresses`, {
+                    name:data.rec_name,
+                    address_line1:data.send_address_line1,
+                    address_line2:data.send_address_line2,
+                    address_city:data.send_address_city,
+                    address_state:data.send_address_state,
+                    address_zip:data.send_address_zip
+                    })
+                    .then((resp) =>{
+                        send_id = resp.data.createdAddress._id
+        
+                        axios.post(`http://localhost:5000/check_bank_accounts`, {
+                        description: data.description,
+                        routing_number: data.routing_number,
+                        account_number: data.account_number,
+                        signatory: data.signatory,
+                        account_type: data.account_type
+                        })
+                        .then((resp) =>{
+                            bank_id = resp.data.verifiedAccount._id;
+                            checkData = {
+                            to: rec_id,
+                            from: send_id,
+                            bank_account: bank_id,
+                            amount: data.amount
+                            };
+                
+                        axios.post(`http://localhost:5000/checks`, checkData)
+                            .then((resp) => {
+                                document.getElementById("loading-overlay").classList.add("hide-overlay")
+                                    
+                                const nodes = document.querySelectorAll("code");
+                                const data = resp.data;
+
+                                nodes[0].innerText = JSON.stringify(data.createdCheck, null, 2);
+                                nodes[1].innerText = JSON.stringify(data.retrievedCheck, null, 2);
+                                nodes[2].innerText = JSON.stringify(data.listedChecks, null, 2);
+                                nodes[3].innerText = JSON.stringify(data.deletedCheck, null, 2);
+                            })
+                            .catch((err) => {
+                                document.getElementById("loading-overlay").classList.add("hide-overlay")
+                                console.error(err);
+                             });
+                        })
+                    })
+                })
+            };
+        });
+    </script>
+</html>

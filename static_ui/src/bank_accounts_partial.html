@@ -1,7 +1,7 @@
 <!doctype html>
 <html>
 <head>
-    <title>Addresses Partial</title>
+    <title>Bank Accounts</title>
     <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.10/styles/default.min.css">
     <link rel="stylesheet" href="shared_form.css">
 </head>
@@ -11,42 +11,50 @@
       <img src="Assets/200w.webp"/>
     </div> 
   </div>
-  <h2>Addresses</h2>
-   <form id="addresses_form" >
+  <h2>Bank Accounts</h2>
+   <form id="bank_accounts_form" >
     <ul class="wrapper">
       <li class="form-row">
-        <label for="name">Enter Name: </label>
-        <input id="name" type="text" name="name" value="YOUR NAME HERE">
+        <label for="description">Enter Description: </label>
+        <input id="description" type="text" name="description" value="Test Bank Account">
       </li>
       <li class="form-row">
-        <label for="address_line1">Enter address line 1: </label>
-        <input id="address_line1" type="text" name="address_line1" value="210 KING ST">
+        <label for="routing_number">Enter routing number: </label>
+        <input id="routing_number" type="text" name="routing_number" value="322271627">
       </li>
       <li class="form-row">
-        <label for="address_line2">Enter address line 2 (optional): </label>
-        <input id="address_line2" type="text" name="address_line2" value="">
+        <label for="account_number">Enter account number: </label>
+        <input id="account_number" type="text" name="account_number" value="123456789">
       </li>
       <li class="form-row">
-        <label for="address_city">Enter city: </label>
-        <input id="address_city" type="text" name="address_city" value="SAN FRANCISCO">
+        <label for="signatory">Enter signatory: </label>
+        <input id="signatory" type="text" name="signatory" value="Gomez Addams">
       </li>
       <li class="form-row">
-        <label for="address_state">Enter state: </label>
-        <input id="address_state" type="text" name="address_state" value="CA">
+        <label for="account_type">Enter account type: </label>
+        <input id="account_type" type="text" name="account_type" value="individual">
       </li>
       <li class="form-row">
-        <label for="address_zip">Enter zip code: </label>
-        <input id="address_zip" type="text" name="address_zip" value="94107">
+        <label for="amounts">Enter amounts: </label>
+        <input id="amounts" type="text"  value="[11,35]">
       </li>
       <li class="button">
         <input type="submit"  value="OK"/>
       </li>
     </ul>
     </form>
-
+    
     <hr>
     <div>
         <h4>CREATED:</h4>
+        <pre>
+          <code class='language-javascript'>
+            <p> TEST PLACEHOLDER </p>
+          </code>
+        </pre>
+        <hr>
+
+        <h4>VERIFIED:</h4>
         <pre>
           <code class='language-javascript'>
             <p> TEST PLACEHOLDER </p>
@@ -84,9 +92,9 @@
     <script>hljs.initHighlightingOnLoad();</script>
     <script>
         $(document).ready(() => {
-            const form = document.querySelector("#addresses_form");
+            const form = document.querySelector("#bank_accounts_form");
             if (!form) {
-                console.warn('Unable to find form: #addresses_form');
+                console.warn('Unable to find form: #bank_accounts_form');
                 return;
             }
             form.onsubmit = async (event) => {
@@ -100,23 +108,23 @@
                         continue;
                     }
                     data = Object.assign({}, data, { [ele.name]: ele.value });
-                    console.log("%%%", data)
+                    console.log("$$$$", data)
                 }
-
-                axios.post(`http://localhost:5000/addresses`, data)
+                axios.post(`http://localhost:5000/bank_accounts`, data)
                     .then((resp) => {
                       document.getElementById("loading-overlay").classList.add("hide-overlay")
                         
                         const nodes = document.querySelectorAll("code");
                         const data = resp.data;
 
-                        nodes[0].innerText = JSON.stringify(data.createdAddress, null, 2);
-                        nodes[1].innerText = JSON.stringify(data.retrievedAddress, null, 2);
-                        nodes[2].innerText = JSON.stringify(data.listedAddresses, null, 2);
-                        nodes[3].innerText = JSON.stringify(data.deletedAddress, null, 2);
+                        nodes[0].innerText = JSON.stringify(data.createdAccount, null, 2);
+                        nodes[1].innerText = JSON.stringify(data.verifiedAccount, null, 2);
+                        nodes[2].innerText = JSON.stringify(data.retrievedAccount, null, 2);
+                        nodes[3].innerText = JSON.stringify(data.listedAccounts, null, 2);
+                        nodes[4].innerText = JSON.stringify(data.deletedAccount, null, 2);
                     })
                     .catch((err) => {
-                      document.getElementById("loading-overlay").classList.add("hide-overlay")  
+                      document.getElementById("loading-overlay").classList.add("hide-overlay")
                       console.error(err);
                     });
             };
