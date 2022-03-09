@@ -5,11 +5,7 @@ import { Request, Response } from "express";
 import cors from "cors";
 
 const session = require("express-session");
-<<<<<<< Updated upstream
-const FileStore = require('session-file-store')(session);
-=======
 var FileStore = require('session-file-store')(session);
->>>>>>> Stashed changes
 
 import {
         Configuration,
@@ -34,11 +30,7 @@ import {
         LettersApi, 
         LetterEditable,
         Postcard, 
-<<<<<<< Updated upstream
-        PostcardsApi,
-=======
         PostcardsApi, 
->>>>>>> Stashed changes
         PostcardList, 
         PostcardDeletion,
         ReverseGeocodeLookupsApi, 
@@ -237,11 +229,7 @@ class App {
             try {
                 // only create is assigned to a new object, as 
                 const createAddress : Address = await Addresses.create(addressData);
-<<<<<<< Updated upstream
-                res.status(200).send(createAddress );
-=======
                 res.status(200).send(createAddress);
->>>>>>> Stashed changes
             } catch (err: any) {
                 console.error(err);
                 res.status(500).send();
@@ -273,17 +261,10 @@ class App {
                     deletedPostcard: cancelPostcard
                 });
                 await this.deleteAddress(postcardsData.to);
-<<<<<<< Updated upstream
-                await this.deleteAddress(postcardsData.from);
-            } catch (err: any) {
-                console.error(err);
-                res.status(500).send({ message: err.message });
-=======
                 await this.deleteAddress(postcardsData.from)
             } catch (err: any) {
                 console.error(err);
                 res.status(500).send({message: err.message});
->>>>>>> Stashed changes
             }
         });
 //DONE**
