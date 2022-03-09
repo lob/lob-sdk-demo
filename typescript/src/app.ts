@@ -1,15 +1,11 @@
 require("dotenv").config();
 import * as bodyParser from "body-parser";
-import * as crypto from 'crypto';
-import { create } from "domain";
 import express from "express";
 import { Request, Response } from "express";
-import * as fs from "fs";
 import cors from "cors";
 
 const session = require("express-session");
-var FileStore = require('session-file-store')(session);
-const path = require("path");
+const FileStore = require('session-file-store')(session);
 
 import {
         Configuration,
@@ -33,10 +29,8 @@ import {
         LetterDeletion, 
         LettersApi, 
         LetterEditable,
-        LetterEditableExtraServiceEnum,
         Postcard, 
-        PostcardsApi, 
-        PostcardEditable, 
+        PostcardsApi,
         PostcardList, 
         PostcardDeletion,
         ReverseGeocodeLookupsApi, 
@@ -149,6 +143,7 @@ class App {
     private async deleteAddress(addressId: string) {
         try {
             await new AddressesApi(config).delete(addressId);
+            console.log(`Deleted Address ${addressId}`);
         } catch (err: any) {
             console.error(err);
         }
@@ -227,23 +222,14 @@ class App {
                 res.status(500).send();
             }
         });
-        router.post("/check_addresses", async (req: Request, res: Response) => {
+        router.post("/address", async (req: Request, res: Response) => {
             // create, get, list, delete address
-            console.log("reqAdd", req.body)
             const Addresses = new AddressesApi(config);
             const addressData = new AddressEditable(req.body);
             try {
                 // only create is assigned to a new object, as 
                 const createAddress : Address = await Addresses.create(addressData);
-                const getAddress : Address = await Addresses.get(createAddress.id);
-                const listAddresses : AddressList = await Addresses.list(2);
-                //const deleteAddress : AddressDeletion = await Addresses.delete(createAddress.id);
-                res.status(200).send({
-                    createdAddress: createAddress,
-                    retrievedAddress: getAddress,
-                    listedAddresses: listAddresses,
-                   // deletedAddress: deleteAddress
-                });
+                res.status(200).send(createAddress );
             } catch (err: any) {
                 console.error(err);
                 res.status(500).send();
@@ -255,7 +241,6 @@ class App {
             const postcardsData = req.body;
             // create, get, list, cancel postcard
             const postcardsApi = new PostcardsApi(config);
-            const addressId = await this.createAddressForMailpieces();
             // const postcardData : PostcardEditable = {
             //     to: addressId,
             //     from: addressId,
@@ -266,7 +251,6 @@ class App {
             try {
                 // only create is assigned to a new object, as 
                 const createPostcard : Postcard = await postcardsApi.create(postcardsData);
-                console.log("create%Postcard", createPostcard,"&&&&&&", createPostcard.id)
                 const getPostcard : Postcard = await postcardsApi.get(createPostcard.id);
                 const listPostcard : PostcardList = await postcardsApi.list(2);
                 const cancelPostcard : PostcardDeletion = await postcardsApi.cancel(createPostcard.id);
@@ -276,10 +260,11 @@ class App {
                     listedPostcards: listPostcard,
                     deletedPostcard: cancelPostcard
                 });
-                await this.deleteAddress(addressId);
+                await this.deleteAddress(postcardsData.to);
+                await this.deleteAddress(postcardsData.from);
             } catch (err: any) {
                 console.error(err);
-                res.status(500).send();
+                res.status(500).send({ message: err.message });
             }
         });
 //DONE**
@@ -438,7 +423,7 @@ class App {
                 routing_number: "322271627",
                 account_number: "123456789",
                 signatory: "Gomez Addams",
-             account_type: BankTypeEnum.Individual
+                account_type: BankTypeEnum.Individual
             });
             let verify = new BankAccountVerify({amounts: [11, 35]});
 

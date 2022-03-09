@@ -15,54 +15,54 @@
    <form id="postcards_form" >
     <ul class="wrapper">TO:
       <li class="form-row">
-        <label for="name">Enter Name: </label>
-        <input id="name" type="text" name="rec_name" value="YOUR NAME HERE">
+        <label for="to_name">Enter Name: </label>
+        <input id="to_name" type="text" name="to_name" value="YOUR NAME HERE">
       </li>
       <li class="form-row">
-        <label for="address_line1">Enter address line 1: </label>
-        <input id="address_line1" type="text" name="rec_address_line1" value="210 KING ST">
+        <label for="to_address_line1">Enter address line 1: </label>
+        <input id="to_address_line1" type="text" name="to_address_line1" value="210 KING ST">
       </li>
       <li class="form-row">
-        <label for="address_line2">Enter address line 2 (optional): </label>
-        <input id="address_line2" type="text" name="rec_address_line2" value="">
+        <label for="to_address_line2">Enter address line 2 (optional): </label>
+        <input id="to_address_line2" type="text" name="to_address_line2" value="">
       </li>
       <li class="form-row">
-        <label for="address_city">Enter city: </label>
-        <input id="address_city" type="text" name="rec_address_city" value="SAN FRANCISCO">
+        <label for="to_address_city">Enter city: </label>
+        <input id="to_address_city" type="text" name="to_address_city" value="SAN FRANCISCO">
       </li>
       <li class="form-row">
-        <label for="address_state">Enter state: </label>
-        <input id="address_state" type="text" name="rec_address_state" value="CA">
+        <label for="to_address_state">Enter state: </label>
+        <input id="to_address_state" type="text" name="to_address_state" value="CA">
       </li>
       <li class="form-row">
-        <label for="address_zip">Enter zip code: </label>
-        <input id="address_zip" type="text" name="rec_address_zip" value="94107">
+        <label for="to_address_zip">Enter zip code: </label>
+        <input id="to_address_zip" type="text" name="to_address_zip" value="94107">
       </li>
     </ul>
     <ul class="wrapper">FROM:
       <li class="form-row">
-        <label for="name">Enter Name: </label>
-        <input id="name" type="text" name="send_name" value="YOUR NAME HERE">
+        <label for="from_name">Enter Name: </label>
+        <input id="from_name" type="text" name="from_name" value="YOUR NAME HERE">
       </li>
       <li class="form-row">
-        <label for="address_line1">Enter address line 1: </label>
-        <input id="address_line1" type="text" name="send_address_line1" value="210 KING ST">
+        <label for="from_address_line1">Enter address line 1: </label>
+        <input id="from_address_line1" type="text" name="from_address_line1" value="210 KING ST">
       </li>
       <li class="form-row">
-        <label for="address_line2">Enter address line 2 (optional): </label>
-        <input id="address_line2" type="text" name="send_address_line2" value="">
+        <label for="from_address_line2">Enter address line 2 (optional): </label>
+        <input id="from_address_line2" type="text" name="from_address_line2" value="">
       </li>
       <li class="form-row">
-        <label for="address_city">Enter city: </label>
-        <input id="address_city" type="text" name="send_address_city" value="SAN FRANCISCO">
+        <label for="from_address_city">Enter city: </label>
+        <input id="from_address_city" type="text" name="from_address_city" value="SAN FRANCISCO">
       </li>
       <li class="form-row">
         <label for="address_state">Enter state: </label>
-        <input id="address_state" type="text" name="send_address_state" value="CA">
+        <input id="address_state" type="text" name="from_address_state" value="CA">
       </li>
       <li class="form-row">
-        <label for="address_zip">Enter zip code: </label>
-        <input id="address_zip" type="text" name="send_address_zip" value="94107">
+        <label for="from_address_zip">Enter zip code: </label>
+        <input id="from_address_zip" type="text" name="from_address_zip" value="94107">
       </li>
     </ul>
     <ul class="wrapper">
@@ -128,7 +128,7 @@
             form.onsubmit = async (event) => {
                 event.preventDefault();
                 event.stopPropagation();
-                document.getElementById("loading-overlay").classList.remove("hide-overlay")                 
+                document.getElementById("loading-overlay").classList.remove("hide-overlay");
                 
                 let data = {};
                 
@@ -137,42 +137,43 @@
                         continue;
                     }
                     data = Object.assign({}, data, { [ele.name]: ele.value });
-                    console.log("%%%", data)
                 }
+                // console.log("%%%", data);
                 try {
-                    const check_to_address = await  axios.post(`http://localhost:5000/check_addresses`, {
-                        name:data.rec_name,
-                        address_line1:data.rec_address_line1,
-                        address_line2:data.rec_address_line2,
-                        address_city:data.rec_address_city,
-                        address_state:data.rec_address_state,
-                        address_zip:data.rec_address_zip
-                        });
-                    const check_from_address = await axios.post(`http://localhost:5000/check_addresses`, {
-                        name:data.rec_name,
-                        address_line1:data.send_address_line1,
-                        address_line2:data.send_address_line2,
-                        address_city:data.send_address_city,
-                        address_state:data.send_address_state,
-                        address_zip:data.send_address_zip
-                        });
+                    // console.log('creating To Addresses');
+                    const { data: check_to_address } = await axios.post(`http://localhost:5000/address`, {
+                        name: data.to_name,
+                        address_line1: data.to_address_line1,
+                        address_line2: data.to_address_line2,
+                        address_city: data.to_address_city,
+                        address_state: data.to_address_state,
+                        address_zip: data.to_address_zip
+                    });
+                    // console.log(check_to_address);
+                    const { data: check_from_address } = await axios.post(`http://localhost:5000/address`, {
+                        name: data.from_name,
+                        address_line1: data.from_address_line1,
+                        address_line2: data.from_address_line2,
+                        address_city: data.from_address_city,
+                        address_state: data.from_address_state,
+                        address_zip: data.from_address_zip
+                    });
+                    // console.log(check_from_address);
                     const postcardsData = {
                         to: check_to_address._id,
                         from: check_from_address._id,
                         front: data.front,
                         back: data.back,
-                    }
-                    const postcards = await axios.post(`http://localhost:5000/postcards`, postcardsData)
-                    document.getElementById("loading-overlay").classList.add("hide-overlay")
+                    };
+                    const { data: postcards } = await axios.post(`http://localhost:5000/postcards`, postcardsData);
+                    document.getElementById("loading-overlay").classList.add("hide-overlay");
                     const nodes = document.querySelectorAll("code");
-                    const data = resp.data;
-                    console.log("resp", resp)
-                    nodes[0].innerText = JSON.stringify(data.createdLetter, null, 2);
-                    nodes[1].innerText = JSON.stringify(data.retrievedLetter, null, 2);
-                    nodes[2].innerText = JSON.stringify(data.listedLetters, null, 2);
-                    nodes[3].innerText = JSON.stringify(data.deletedLetter, null, 2);
+                    nodes[0].innerText = JSON.stringify(postcards.createdPostcard, null, 2);
+                    nodes[1].innerText = JSON.stringify(postcards.retrievedPostcard, null, 2);
+                    nodes[2].innerText = JSON.stringify(postcards.listedPostcards, null, 2);
+                    nodes[3].innerText = JSON.stringify(postcards.deletedPostcard, null, 2);
                 } catch (err) {
-                    document.getElementById("loading-overlay").classList.add("hide-overlay")  
+                    document.getElementById("loading-overlay").classList.add("hide-overlay")  ;
                     console.error(err);
                 }
             };
