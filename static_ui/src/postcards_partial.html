@@ -65,7 +65,7 @@
         <input id="from_address_zip" type="text" name="from_address_zip" value="94107">
       </li>
     </ul>
-    <ul class="wrapper">
+    <ul class="wrapper">	
       <li class="form-row">
         <label for="front">Front: </label>
         <input id="front" type="text" name="front" value="https://s3-us-west-2.amazonaws.com/public.lob.com/assets/templates/4x6_pc_template.pdf",>
@@ -128,16 +128,24 @@
             form.onsubmit = async (event) => {
                 event.preventDefault();
                 event.stopPropagation();
+<<<<<<< Updated upstream
                 document.getElementById("loading-overlay").classList.remove("hide-overlay");
+=======
+                document.getElementById("loading-overlay").classList.remove("hide-overlay");                 
+>>>>>>> Stashed changes
                 
                 let data = {};
-                
+               
                 for (const ele of event.target ) {
                     if (!ele.name || !ele.value) {
                         continue;
                     }
                     data = Object.assign({}, data, { [ele.name]: ele.value });
+<<<<<<< Updated upstream
                 }
+=======
+                  }
+>>>>>>> Stashed changes
                 // console.log("%%%", data);
                 try {
                     // console.log('creating To Addresses');
@@ -171,9 +179,15 @@
                     nodes[0].innerText = JSON.stringify(postcards.createdPostcard, null, 2);
                     nodes[1].innerText = JSON.stringify(postcards.retrievedPostcard, null, 2);
                     nodes[2].innerText = JSON.stringify(postcards.listedPostcards, null, 2);
+<<<<<<< Updated upstream
                     nodes[3].innerText = JSON.stringify(postcards.deletedPostcard, null, 2);
                 } catch (err) {
                     document.getElementById("loading-overlay").classList.add("hide-overlay")  ;
+=======
+                    nodes[3].innerText = JSON.stringify(postcards.deletedPostcard, null, 2);es[3].innerText = JSON.stringify(data.deletedLetter, null, 2);
+                } catch (err) {
+                    document.getElementById("loading-overlay").classList.add("hide-overlay") ;            
+>>>>>>> Stashed changes
                     console.error(err);
                 }
             };
