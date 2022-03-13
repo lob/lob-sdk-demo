@@ -1,0 +1,197 @@
+<!doctype html>
+<html>
+<head>
+    <title>Postcards Partial</title>
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.10/styles/default.min.css">
+    <link rel="stylesheet" href="shared_form.css">
+</head>
+<body>
+  <div class="loading-overlay hide-overlay" id="loading-overlay" style="z-index:5; opacity: 45%; width: 100vw; height: 100vh;">
+    <div class="loading-overlay-image-container  hide-gif"id="loading-overlay-image-container ">
+      <img src="Assets/200w.webp"/>
+    </div> 
+  </div>
+  <h2>Postcards</h2>
+   <form id="postcards_form" >
+    <ul class="wrapper">TO:
+      <li class="form-row">
+        <label for="to_name">Enter Name: </label>
+        <input id="to_name" type="text" name="to_name" value="YOUR NAME HERE">
+      </li>
+      <li class="form-row">
+        <label for="to_address_line1">Enter address line 1: </label>
+        <input id="to_address_line1" type="text" name="to_address_line1" value="210 KING ST">
+      </li>
+      <li class="form-row">
+        <label for="to_address_line2">Enter address line 2 (optional): </label>
+        <input id="to_address_line2" type="text" name="to_address_line2" value="">
+      </li>
+      <li class="form-row">
+        <label for="to_address_city">Enter city: </label>
+        <input id="to_address_city" type="text" name="to_address_city" value="SAN FRANCISCO">
+      </li>
+      <li class="form-row">
+        <label for="to_address_state">Enter state: </label>
+        <input id="to_address_state" type="text" name="to_address_state" value="CA">
+      </li>
+      <li class="form-row">
+        <label for="to_address_zip">Enter zip code: </label>
+        <input id="to_address_zip" type="text" name="to_address_zip" value="94107">
+      </li>
+    </ul>
+    <ul class="wrapper">FROM:
+      <li class="form-row">
+        <label for="from_name">Enter Name: </label>
+        <input id="from_name" type="text" name="from_name" value="YOUR NAME HERE">
+      </li>
+      <li class="form-row">
+        <label for="from_address_line1">Enter address line 1: </label>
+        <input id="from_address_line1" type="text" name="from_address_line1" value="210 KING ST">
+      </li>
+      <li class="form-row">
+        <label for="from_address_line2">Enter address line 2 (optional): </label>
+        <input id="from_address_line2" type="text" name="from_address_line2" value="">
+      </li>
+      <li class="form-row">
+        <label for="from_address_city">Enter city: </label>
+        <input id="from_address_city" type="text" name="from_address_city" value="SAN FRANCISCO">
+      </li>
+      <li class="form-row">
+        <label for="address_state">Enter state: </label>
+        <input id="address_state" type="text" name="from_address_state" value="CA">
+      </li>
+      <li class="form-row">
+        <label for="from_address_zip">Enter zip code: </label>
+        <input id="from_address_zip" type="text" name="from_address_zip" value="94107">
+      </li>
+    </ul>
+    <ul class="wrapper">	
+      <li class="form-row">
+        <label for="front">Front: </label>
+        <input id="front" type="text" name="front" value="https://s3-us-west-2.amazonaws.com/public.lob.com/assets/templates/4x6_pc_template.pdf",>
+      </li>
+      <li class="form-row">
+        <label for="back">Back: </label>
+        <input id="back" type="text" name="back" value="https://s3-us-west-2.amazonaws.com/public.lob.com/assets/templates/4x6_pc_template.pdf">
+      </li>
+      <li class="button">
+        <input type="submit"  value="OK"/>
+      </li>
+    </ul>
+    </form>
+
+    <hr>
+    <div>
+        <h4>CREATED:</h4>
+        <pre>
+          <code class='language-javascript'>
+            <p> TEST PLACEHOLDER </p>
+          </code>
+        </pre>
+        <hr>
+
+        <h4>RETRIEVED:</h4>
+        <pre>
+          <code class='language-javascript'>
+            <p> TEST PLACEHOLDER </p>
+          </code>
+        </pre>
+        <hr>
+
+        <h4>LISTED:</h4>
+        <pre>
+          <code class='language-javascript'>
+            <p> TEST PLACEHOLDER </p>
+          </code>
+        </pre>
+
+        <h4>DELETED:</h4>
+        <pre>
+          <code class='language-javascript'>
+            <p> TEST PLACEHOLDER </p>
+          </code>
+        </pre>
+    </div>
+ 
+</body>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.10/highlight.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha256-4+XzXVhsDmqanXGHaHvgh1gMQKX40OUvDEBTu8JcmNs=" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.25.0/axios.min.js" integrity="sha512-/Q6t3CASm04EliI1QyIDAA/nDo9R8FQ/BULoUFyN4n/BDdyIxeH7u++Z+eobdmr11gG5D/6nPFyDlnisDwhpYA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script>hljs.initHighlightingOnLoad();</script>
+    <script>
+        $(document).ready(() => {
+            const form = document.querySelector("#postcards_form");
+            if (!form) {
+                console.warn('Unable to find form: #postcards_form');
+                return;
+            }
+            form.onsubmit = async (event) => {
+                event.preventDefault();
+                event.stopPropagation();
+<<<<<<< Updated upstream
+                document.getElementById("loading-overlay").classList.remove("hide-overlay");
+=======
+                document.getElementById("loading-overlay").classList.remove("hide-overlay");                 
+>>>>>>> Stashed changes
+                
+                let data = {};
+               
+                for (const ele of event.target ) {
+                    if (!ele.name || !ele.value) {
+                        continue;
+                    }
+                    data = Object.assign({}, data, { [ele.name]: ele.value });
+<<<<<<< Updated upstream
+                }
+=======
+                  }
+>>>>>>> Stashed changes
+                // console.log("%%%", data);
+                try {
+                    // console.log('creating To Addresses');
+                    const { data: check_to_address } = await axios.post(`http://localhost:5000/address`, {
+                        name: data.to_name,
+                        address_line1: data.to_address_line1,
+                        address_line2: data.to_address_line2,
+                        address_city: data.to_address_city,
+                        address_state: data.to_address_state,
+                        address_zip: data.to_address_zip
+                    });
+                    // console.log(check_to_address);
+                    const { data: check_from_address } = await axios.post(`http://localhost:5000/address`, {
+                        name: data.from_name,
+                        address_line1: data.from_address_line1,
+                        address_line2: data.from_address_line2,
+                        address_city: data.from_address_city,
+                        address_state: data.from_address_state,
+                        address_zip: data.from_address_zip
+                    });
+                    // console.log(check_from_address);
+                    const postcardsData = {
+                        to: check_to_address._id,
+                        from: check_from_address._id,
+                        front: data.front,
+                        back: data.back,
+                    };
+                    const { data: postcards } = await axios.post(`http://localhost:5000/postcards`, postcardsData);
+                    document.getElementById("loading-overlay").classList.add("hide-overlay");
+                    const nodes = document.querySelectorAll("code");
+                    nodes[0].innerText = JSON.stringify(postcards.createdPostcard, null, 2);
+                    nodes[1].innerText = JSON.stringify(postcards.retrievedPostcard, null, 2);
+                    nodes[2].innerText = JSON.stringify(postcards.listedPostcards, null, 2);
+<<<<<<< Updated upstream
+                    nodes[3].innerText = JSON.stringify(postcards.deletedPostcard, null, 2);
+                } catch (err) {
+                    document.getElementById("loading-overlay").classList.add("hide-overlay")  ;
+=======
+                    nodes[3].innerText = JSON.stringify(postcards.deletedPostcard, null, 2);es[3].innerText = JSON.stringify(data.deletedLetter, null, 2);
+                } catch (err) {
+                    document.getElementById("loading-overlay").classList.add("hide-overlay") ;            
+>>>>>>> Stashed changes
+                    console.error(err);
+                }
+            };
+        });
+    </script>
+</html>
+
