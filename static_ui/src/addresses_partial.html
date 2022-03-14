@@ -3,7 +3,7 @@
 <head>
     <title>Addresses Partial</title>
     <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.10/styles/default.min.css">
-    <link rel="stylesheet" href="shared_form.css">
+    <link rel="stylesheet" href="addresses_partial.css">
 </head>
 <body>
   <div class="loading-overlay hide-overlay" id="loading-overlay" style="z-index:5; opacity: 45%; width: 100vw; height: 100vh;">
@@ -11,8 +11,7 @@
       <img src="Assets/200w.webp"/>
     </div> 
   </div>
-  <h2>Addresses</h2>
-   <form id="addresses_form" >
+   <form id="addresses_form" style="display:grid; grid-template-columns: 2fr 2fr;">
     <ul class="wrapper">
       <li class="form-row">
         <label for="name">Enter Name: </label>
@@ -100,7 +99,6 @@
                         continue;
                     }
                     data = Object.assign({}, data, { [ele.name]: ele.value });
-                    console.log("%%%", data)
                 }
 
                 axios.post(`http://localhost:5000/addresses`, data)
@@ -116,8 +114,7 @@
                         nodes[3].innerText = JSON.stringify(data.deletedAddress, null, 2);
                     })
                     .catch((err) => {
-                      document.getElementById("loading-overlay").classList.add("hide-overlay")  
-                      console.error(err);
+                        console.error(err);
                     });
             };
         });
