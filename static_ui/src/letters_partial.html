@@ -143,70 +143,48 @@
                 document.getElementById("loading-overlay").classList.remove("hide-overlay")                 
                 
                 let data = {};
-                let rec_id = "";
-                let send_id = "";
-                let lettersData ={};
 
                 for (const ele of event.target ) {
                     if (!ele.name || !ele.value) {
                         continue;
                     }
                     data = Object.assign({}, data, { [ele.name]: ele.value });
-                    console.log("%%%", data)
                 }
-                axios.post(`http://localhost:5000/check_addresses`, {
-                name:data.rec_name,
-                address_line1:data.rec_address_line1,
-                address_line2:data.rec_address_line2,
-                address_city:data.rec_address_city,
-                address_state:data.rec_address_state,
-                address_zip:data.rec_address_zip
-                })
-                .then((resp) =>{
-                  rec_id = resp.data.createdAddress._id;
-                  axios.post(`http://localhost:5000/check_addresses`, {
-                    name:data.rec_name,
-                    address_line1:data.send_address_line1,
-                    address_line2:data.send_address_line2,
-                    address_city:data.send_address_city,
-                    address_state:data.send_address_state,
-                    address_zip:data.send_address_zip
+                try {
+                    const {data: check_to_address} = await axios.post(`http://localhost:5000/address`, {
+                        name:data.rec_name,
+                        address_line1:data.rec_address_line1,
+                        address_line2:data.rec_address_line2,
+                        address_city:data.rec_address_city,
+                        address_state:data.rec_address_state,
+                        address_zip:data.rec_address_zip
+                        })
+                    const {data: check_from_address} = await axios.post(`http://localhost:5000/address`, {
+                        name:data.rec_name,
+                        address_line1:data.send_address_line1,
+                        address_line2:data.send_address_line2,
+                        address_city:data.send_address_city,
+                        address_state:data.send_address_state,
+                        address_zip:data.send_address_zip
                     })
-                    .then((resp) =>{
-                      send_id = resp.data.createdAddress._id;
-                      lettersData = {
-                        to: rec_id,
-                        from: send_id,
+                    const lettersData = {
+                        to: check_to_address._id,
+                        from: check_from_address._id,
                         color: data.color,
                         extra_service: data.extra_service,
                         file: data.file
                       }
-                      axios.post(`http://localhost:5000/letters`, lettersData)
-                      .then((resp) => {
+                    const {data: letters} = await axios.post(`http://localhost:5000/letters`, lettersData)
                         document.getElementById("loading-overlay").classList.add("hide-overlay")
-                        
                         const nodes = document.querySelectorAll("code");
-                        const data = resp.data;
-
-                        nodes[0].innerText = JSON.stringify(data.createdLetter, null, 2);
-                        nodes[1].innerText = JSON.stringify(data.retrievedLetter, null, 2);
-                        nodes[2].innerText = JSON.stringify(data.listedLetters, null, 2);
-                        nodes[3].innerText = JSON.stringify(data.deletedLetter, null, 2);
-                      })
-                      .catch((err) => {
+                        nodes[0].innerText = JSON.stringify(letters.createdLetter, null, 2);
+                        nodes[1].innerText = JSON.stringify(letters.retrievedLetter, null, 2);
+                        nodes[2].innerText = JSON.stringify(letters.listedLetters, null, 2);
+                        nodes[3].innerText = JSON.stringify(letters.deletedLetter, null, 2);
+                    } catch (err)  {
                         document.getElementById("loading-overlay").classList.add("hide-overlay")  
                         console.error(err);
-                      });
-                    })
-                    .catch((err) => {
-                      document.getElementById("loading-overlay").classList.add("hide-overlay")  
-                      console.error(err);
-                    });
-                })
-                .catch((err) => {
-                      document.getElementById("loading-overlay").classList.add("hide-overlay")  
-                      console.error(err);
-                });
+                    }       
             };
         });
     </script>

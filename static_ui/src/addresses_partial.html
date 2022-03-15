@@ -100,25 +100,19 @@
                         continue;
                     }
                     data = Object.assign({}, data, { [ele.name]: ele.value });
-                    console.log("%%%", data)
                 }
-
-                axios.post(`http://localhost:5000/addresses`, data)
-                    .then((resp) => {
+                try {
+                const {data: addresses} = await axios.post(`http://localhost:5000/addresses`, data)
                       document.getElementById("loading-overlay").classList.add("hide-overlay")
-                        
-                        const nodes = document.querySelectorAll("code");
-                        const data = resp.data;
-
-                        nodes[0].innerText = JSON.stringify(data.createdAddress, null, 2);
-                        nodes[1].innerText = JSON.stringify(data.retrievedAddress, null, 2);
-                        nodes[2].innerText = JSON.stringify(data.listedAddresses, null, 2);
-                        nodes[3].innerText = JSON.stringify(data.deletedAddress, null, 2);
-                    })
-                    .catch((err) => {
+                      const nodes = document.querySelectorAll("code")
+                      nodes[0].innerText = JSON.stringify(addresses.createdAddress, null, 2);
+                      nodes[1].innerText = JSON.stringify(addresses.retrievedAddress, null, 2);
+                      nodes[2].innerText = JSON.stringify(addresses.listedAddresses, null, 2);
+                      nodes[3].innerText = JSON.stringify(addresses.deletedAddress, null, 2);
+                  } catch(err) {
                       document.getElementById("loading-overlay").classList.add("hide-overlay")  
                       console.error(err);
-                    });
+                  }
             };
         });
     </script>
