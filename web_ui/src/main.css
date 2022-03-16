@@ -2,6 +2,7 @@
     box-sizing: border-box;
     font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
 }
+
 body {
     display: flex;
     flex-direction: row;
@@ -9,18 +10,22 @@ body {
     min-height: 100vh;
     margin: 0;
 }
+
 textarea {
     font-size: 16px;
     width: 100%;
 }
+
 hr {
     margin-bottom: 15px;
 }
+
 h3 {
     margin-top: 0px;
 }
+
 button {
-    text-shadow: 0 0.125rem 0.1875rem rgba(0,0,0,.1);
+    text-shadow: 0 0.125rem 0.1875rem rgba(0, 0, 0, .1);
     color: #FFF;
     background-color: #21A623;
     margin: 10px;
@@ -30,66 +35,109 @@ button {
     letter-spacing: 1px;;
     cursor: pointer;
 }
- h2, h4 {
+
+h2, h4 {
     margin-bottom: 5px;
+}
+
+.hidden {
+    display: none;
 }
 
 .left-banner {
     background-color: #32465A;
     flex: 1;
-    padding-top: 15px;
+    padding-top: 1em;
     max-width: 20%;
 }
+
+/*Navigation Header*/
+.nav-header {
+    margin: 0 1em 0 2em;
+}
+
+.container-logo {
+    display: flex;
+    width: 100%
+}
+
+.container-logo > svg {
+    margin-right: 0.5em;
+    height: 7em;
+}
+.container-logo > svg#logo-node {
+    width: 8em;
+}
+
+/*Menu*/
 .menu-items, .menu-items a {
     color: white;
     text-decoration: none;
 }
+
+.menu-items > ul {
+    padding-left: 2em;
+}
+
 .menu-items li:hover {
     text-decoration: underline;
 }
+
 .menu-items li {
     margin-bottom: 8px;
     font-size: 14px;
     list-style: none;
 }
+
 .menu-items .active {
     text-decoration: underline;
     font-weight: bold;
 }
+
 .menu-items h1 {
     margin-left: -20px;
     margin-top: 45px;
 }
+
 .core-content {
     display: flex;
     flex-direction: column;
     flex: 5;
     max-width: 80%;
 }
+
 .api-section {
     cursor: pointer;
+    margin-bottom: 1em;
 }
+
 .nav-section {
     display: none;
 }
+
 .open-nav {
     display: block;
 }
+
 .open-caret {
     display: none;
     cursor: default;
     float: right;
 }
+
 .closed-caret {
     float: right;
     cursor: default;
 }
+
 .open-caret {
     display: block;
 }
+
 .closed-caret {
     display: none;
 }
+
 @media only screen and (max-width: 600px) {
     .menu-items, .core-content {
         position: relative;
@@ -100,17 +148,20 @@ button {
         height: auto;
     }
 }
+
 img {
     width: 30px;
     margin-left: 13px;
     margin-right: 9px;
 }
+
 span {
     font-weight: 10;
     font-size: 15px;
     letter-spacing: 2px;
     margin-left: 10px;
 }
- iframe#workspace {
+
+iframe#workspace {
     height: 100%;
-} 
+}

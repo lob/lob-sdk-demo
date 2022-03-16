@@ -1,3 +1,4 @@
 node_modules
-*.env
+LOCAL.env
 .idea
+*/**/.DS_Store
