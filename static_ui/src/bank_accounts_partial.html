@@ -92,41 +92,36 @@
     <script>hljs.initHighlightingOnLoad();</script>
     <script>
         $(document).ready(() => {
-            const form = document.querySelector("#bank_accounts_form");
-            if (!form) {
-                console.warn('Unable to find form: #bank_accounts_form');
-                return;
-            }
-            form.onsubmit = async (event) => {
-                event.preventDefault();
-                event.stopPropagation();
-                document.getElementById("loading-overlay").classList.remove("hide-overlay")                 
-                
-                let data = {};
-                for (const ele of event.target ) {
-                    if (!ele.name || !ele.value) {
-                        continue;
-                    }
-                    data = Object.assign({}, data, { [ele.name]: ele.value });
-                    console.log("$$$$", data)
-                }
-                axios.post(`http://localhost:5000/bank_accounts`, data)
-                    .then((resp) => {
-                      document.getElementById("loading-overlay").classList.add("hide-overlay")
-                        
-                        const nodes = document.querySelectorAll("code");
-                        const data = resp.data;
-
-                        nodes[0].innerText = JSON.stringify(data.createdAccount, null, 2);
-                        nodes[1].innerText = JSON.stringify(data.verifiedAccount, null, 2);
-                        nodes[2].innerText = JSON.stringify(data.retrievedAccount, null, 2);
-                        nodes[3].innerText = JSON.stringify(data.listedAccounts, null, 2);
-                        nodes[4].innerText = JSON.stringify(data.deletedAccount, null, 2);
-                    })
-                    .catch((err) => {
-                      document.getElementById("loading-overlay").classList.add("hide-overlay")
-                      console.error(err);
-                    });
+          const form = document.querySelector("#bank_accounts_form");
+          if (!form) {
+            console.warn('Unable to find form: #bank_accounts_form');
+            return;
+          }
+          form.onsubmit = async (event) => {
+              event.preventDefault();
+              event.stopPropagation();
+              document.getElementById("loading-overlay").classList.remove("hide-overlay")                 
+              
+              let data = {};
+              for (const ele of event.target ) {
+                if (!ele.name || !ele.value) {
+                  continue;
+               }
+                data = Object.assign({}, data, { [ele.name]: ele.value });
+              }
+              try {
+                const {data: bankAccounts} = await axios.post(`http://localhost:5000/bank_accounts`, data)
+                document.getElementById("loading-overlay").classList.add("hide-overlay")
+                const nodes = document.querySelectorAll("code");
+                nodes[0].innerText = JSON.stringify(bankAccounts.createdAccount, null, 2);
+                nodes[1].innerText = JSON.stringify(bankAccounts.verifiedAccount, null, 2);
+                nodes[2].innerText = JSON.stringify(bankAccounts.retrievedAccount, null, 2);
+                nodes[3].innerText = JSON.stringify(bankAccounts.listedAccounts, null, 2);
+                nodes[4].innerText = JSON.stringify(bankAccounts.deletedAccount, null, 2);
+                } catch (err){
+                  document.getElementById("loading-overlay").classList.add("hide-overlay")
+                  console.error(err);
+                };
             };
         });
     </script>

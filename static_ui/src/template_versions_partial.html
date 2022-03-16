@@ -85,31 +85,27 @@
                 document.getElementById("loading-overlay").classList.remove("hide-overlay")                 
                 
                 let data = {};
+
                 for (const ele of event.target ) {
                     if (!ele.name || !ele.value) {
                         continue;
                     }
                     data = Object.assign({}, data, { [ele.name]: ele.value });
-                    console.log("%%%", data)
                 }
-
-                axios.post(`http://localhost:5000/template_versions`, data)
-                    .then((resp) => {
-                      document.getElementById("loading-overlay").classList.add("hide-overlay")
-                        
-                        const nodes = document.querySelectorAll("code");
-                        const data = resp.data;
-
-                        nodes[0].innerText = JSON.stringify(data.createdVersion, null, 2);
-                        nodes[1].innerText = JSON.stringify(data.retrievedVersion, null, 2);
-                        nodes[2].innerText = JSON.stringify(data.listedVersions, null, 2);
-                        nodes[3].innerText = JSON.stringify(data.updatedVersion, null, 2);
-                        nodes[4].innerText = JSON.stringify(data.deletedVersion, null, 2);
-                    })
-                    .catch((err) => {
-                      document.getElementById("loading-overlay").classList.add("hide-overlay")  
-                      console.error(err);
-                    });
+                try {
+                    const {data: vrsn} = await axios.post(`http://localhost:5000/template_versions`, data)
+                    document.getElementById("loading-overlay").classList.add("hide-overlay")     
+                    const nodes = document.querySelectorAll("code");
+                    //const data = resp.data;
+                    nodes[0].innerText = JSON.stringify(vrsn.createdVersion, null, 2);
+                    nodes[1].innerText = JSON.stringify(vrsn.retrievedVersion, null, 2);
+                    nodes[2].innerText = JSON.stringify(vrsn.listedVersions, null, 2);
+                    nodes[3].innerText = JSON.stringify(vrsn.updatedVersion, null, 2);
+                    nodes[4].innerText = JSON.stringify(vrsn.deletedVersion, null, 2);
+                } catch(err) {
+                    document.getElementById("loading-overlay").classList.add("hide-overlay")  
+                    console.error(err);
+                  };
             };
         });
     </script>

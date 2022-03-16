@@ -90,26 +90,20 @@
                         continue;
                     }
                     data = Object.assign({}, data, { [ele.name]: ele.value });
-                    console.log("%%%", data)
                 }
-
-                axios.post(`http://localhost:5000/templates`, data)
-                    .then((resp) => {
+                try {
+                const {data: templates} = await axios.post(`http://localhost:5000/templates`, data)
                       document.getElementById("loading-overlay").classList.add("hide-overlay")
-                        
-                        const nodes = document.querySelectorAll("code");
-                        const data = resp.data;
-
-                        nodes[0].innerText = JSON.stringify(data.createdTemplate, null, 2);
-                        nodes[1].innerText = JSON.stringify(data.retrievedTemplate, null, 2);
-                        nodes[2].innerText = JSON.stringify(data.listedTemplates, null, 2);
-                        nodes[3].innerText = JSON.stringify(data.updatedTemplate, null, 2);
-                        nodes[4].innerText = JSON.stringify(data.deletedTemplate, null, 2);
-                    })
-                    .catch((err) => {
-                      document.getElementById("loading-overlay").classList.add("hide-overlay")  
-                      console.error(err);
-                    });
+                      const nodes = document.querySelectorAll("code");
+                      nodes[0].innerText = JSON.stringify(templates.createdTemplate, null, 2);
+                      nodes[1].innerText = JSON.stringify(templates.retrievedTemplate, null, 2);
+                      nodes[2].innerText = JSON.stringify(templates.listedTemplates, null, 2);
+                      nodes[3].innerText = JSON.stringify(templates.updatedTemplate, null, 2);
+                      nodes[4].innerText = JSON.stringify(templates.deletedTemplate, null, 2);
+                  } catch (err){
+                    document.getElementById("loading-overlay").classList.add("hide-overlay")  
+                    console.error(err);
+                  };
             };
         });
     </script>
