@@ -83,7 +83,7 @@ class App {
                     createdAddress: createAddress,
                     retrievedAddress: getAddress,
                     listedAddresses: listAddresses,
-                   deletedAddress: deleteAddress
+                    deletedAddress: deleteAddress
                 });
             } catch (err) {
                 console.error(err.message);
@@ -120,7 +120,7 @@ class App {
                 signatory: "Test Signatory",
                 account_type: "individual"
             };
-            const verify = req.body.amounts ? { amounts: eq.body.amounts } : { amounts: [11, 35] };
+            const verify = req.body.amounts ? { amounts: req.body.amounts } : { amounts: [11, 35] };
 
             try {
                 const createBankAccount = await Lob.bankAccounts.create(bankData);
@@ -153,7 +153,7 @@ class App {
                 signatory: "Test Signatory",
                 account_type: "individual"
             };
-            const verify = req.body.amounts ? { amounts: eq.body.amounts } : { amounts: [11, 35] };
+            const verify = req.body.amounts ? { amounts: req.body.amounts } : { amounts: [11, 35] };
 
             try {
                 const createBankAccount = await Lob.bankAccounts.create(bankData);
