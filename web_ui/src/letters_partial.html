@@ -1,0 +1,203 @@
+<!doctype html>
+<html>
+<head>
+    <title>Letters Partial</title>
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.10/styles/default.min.css">
+    <link rel="stylesheet" href="shared_form.css">
+</head>
+<body>
+<div class="loading-overlay hide-overlay" id="loading-overlay"
+     style="z-index:5; opacity: 45%; width: 100vw; height: 100vh;">
+    <div class="loading-overlay-image-container  hide-gif" id="loading-overlay-image-container ">
+        <img src="Assets/200w.webp"/>
+    </div>
+</div>
+<h2>Letters</h2>
+<form id="letters_form">
+    <ul class="wrapper">TO:
+        <li class="form-row">
+            <label for="name">Enter Name: </label>
+            <input id="name" type="text" name="rec_name" value="YOUR NAME HERE">
+        </li>
+        <li class="form-row">
+            <label for="address_line1">Enter address line 1: </label>
+            <input id="address_line1" type="text" name="rec_address_line1" value="210 KING ST">
+        </li>
+        <li class="form-row">
+            <label for="address_line2">Enter address line 2 (optional): </label>
+            <input id="address_line2" type="text" name="rec_address_line2" value="">
+        </li>
+        <li class="form-row">
+            <label for="address_city">Enter city: </label>
+            <input id="address_city" type="text" name="rec_address_city" value="SAN FRANCISCO">
+        </li>
+        <li class="form-row">
+            <label for="address_state">Enter state: </label>
+            <input id="address_state" type="text" name="rec_address_state" value="CA">
+        </li>
+        <li class="form-row">
+            <label for="address_zip">Enter zip code: </label>
+            <input id="address_zip" type="text" name="rec_address_zip" value="94107">
+        </li>
+    </ul>
+    <ul class="wrapper">FROM:
+        <li class="form-row">
+            <label for="name">Enter Name: </label>
+            <input id="name" type="text" name="send_name" value="YOUR NAME HERE">
+        </li>
+        <li class="form-row">
+            <label for="address_line1">Enter address line 1: </label>
+            <input id="address_line1" type="text" name="send_address_line1" value="210 KING ST">
+        </li>
+        <li class="form-row">
+            <label for="address_line2">Enter address line 2 (optional): </label>
+            <input id="address_line2" type="text" name="send_address_line2" value="">
+        </li>
+        <li class="form-row">
+            <label for="address_city">Enter city: </label>
+            <input id="address_city" type="text" name="send_address_city" value="SAN FRANCISCO">
+        </li>
+        <li class="form-row">
+            <label for="address_state">Enter state: </label>
+            <input id="address_state" type="text" name="send_address_state" value="CA">
+        </li>
+        <li class="form-row">
+            <label for="address_zip">Enter zip code: </label>
+            <input id="address_zip" type="text" name="send_address_zip" value="94107">
+        </li>
+        <!-- <li class="button">
+          <input type="submit"  value="OK"/>
+        </li> -->
+    </ul>
+    <ul class="wrapper">
+        <li class="form-row">
+            <label for="color">Color (true or false): </label>
+            <input id="color" type="text" name="color" value="true">
+        </li>
+        <li class="form-row">
+            <label for="extra_service">Extra Service: </label>
+            <input id="extra_service" type="text" name="extra_service" value="certified">
+        </li>
+        <li class="form-row">
+            <label for="file">File: </label>
+            <input id="file" type="text" name="file"
+                   value="https://s3-us-west-2.amazonaws.com/public.lob.com/assets/us_letter_1pg.pdf"
+            >
+        </li>
+        <li class="button">
+            <input type="submit" value="OK"/>
+        </li>
+    </ul>
+</form>
+<div class="message-error hidden">
+    <span class="message-error-status">??</span>
+    <span class="message-error-status-text">??</span>
+    <span class="message-error-message">??</span>
+</div>
+
+<hr>
+<div>
+    <h4>CREATED:</h4>
+    <pre>
+          <code class='language-javascript'>
+            <p> TEST PLACEHOLDER </p>
+          </code>
+        </pre>
+    <hr>
+
+    <h4>RETRIEVED:</h4>
+    <pre>
+          <code class='language-javascript'>
+            <p> TEST PLACEHOLDER </p>
+          </code>
+        </pre>
+    <hr>
+
+    <h4>LISTED:</h4>
+    <pre>
+          <code class='language-javascript'>
+            <p> TEST PLACEHOLDER </p>
+          </code>
+        </pre>
+
+    <h4>DELETED:</h4>
+    <pre>
+          <code class='language-javascript'>
+            <p> TEST PLACEHOLDER </p>
+          </code>
+        </pre>
+</div>
+
+</body>
+<script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.10/highlight.min.js"></script>
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"
+        integrity="sha256-4+XzXVhsDmqanXGHaHvgh1gMQKX40OUvDEBTu8JcmNs=" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.25.0/axios.min.js"
+        integrity="sha512-/Q6t3CASm04EliI1QyIDAA/nDo9R8FQ/BULoUFyN4n/BDdyIxeH7u++Z+eobdmr11gG5D/6nPFyDlnisDwhpYA=="
+        crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script>hljs.initHighlightingOnLoad();</script>
+<script>
+    $(document).ready(() => {
+        const form = document.querySelector("#letters_form");
+        if (!form) {
+            console.warn('Unable to find form: #letters_form');
+            return;
+        }
+        form.onsubmit = async (event) => {
+            event.preventDefault();
+            event.stopPropagation();
+            document.getElementById("loading-overlay").classList.remove("hide-overlay");
+            document.querySelector(`.message-error`).classList.add('hidden');
+
+            let data = {};
+            for (const ele of event.target) {
+                if (!ele.name || !ele.value) {
+                    continue;
+                }
+                data = Object.assign({}, data, {[ele.name]: ele.value});
+            }
+            try {
+                const {data: letter_to_address} = await axios.post(`http://localhost:5000/address`, {
+                    name: data.rec_name,
+                    address_line1: data.rec_address_line1,
+                    address_line2: data.rec_address_line2,
+                    address_city: data.rec_address_city,
+                    address_state: data.rec_address_state,
+                    address_zip: data.rec_address_zip
+                });
+                const {data: letter_from_address} = await axios.post(`http://localhost:5000/address`, {
+                    name: data.rec_name,
+                    address_line1: data.send_address_line1,
+                    address_line2: data.send_address_line2,
+                    address_city: data.send_address_city,
+                    address_state: data.send_address_state,
+                    address_zip: data.send_address_zip
+                });
+                const lettersData = {
+                    to: letter_to_address._id || letter_to_address.id,
+                    from: letter_from_address._id || letter_from_address.id,
+                    color: data.color,
+                    extra_service: data.extra_service,
+                    file: data.file
+                };
+                const {data: letters} = await axios.post(`http://localhost:5000/letters`, lettersData);
+                document.getElementById("loading-overlay").classList.add("hide-overlay");
+                const nodes = document.querySelectorAll("code");
+                nodes[0].innerText = JSON.stringify(letters.createdLetter, null, 2);
+                nodes[1].innerText = JSON.stringify(letters.retrievedLetter, null, 2);
+                nodes[2].innerText = JSON.stringify(letters.listedLetters, null, 2);
+                nodes[3].innerText = JSON.stringify(letters.deletedLetter, null, 2);
+            } catch (err) {
+                document.getElementById("loading-overlay").classList.add("hide-overlay");
+                document.querySelector(`.message-error`).classList.remove('hidden');
+                document.querySelector(`.message-error-status`).innerHTML = err.response.data.status;
+                document.querySelector(`.message-error-status-text`).innerHTML = err.response.data.statusText;
+                document.querySelector(`.message-error-message`).innerHTML = err.response.data.message;
+
+                console.log(err);
+            }
+        };
+    });
+</script>
+</html>
+
