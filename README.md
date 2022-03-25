@@ -1,8 +1,8 @@
-# lob-typescript-demo
+# lob-sdk-demo
 The goal of this project is to provide interactive samples of meaningful operations with Lob's SDKs.
 
-
 ## Overview
+
 
 ## Usage
 
