@@ -83,7 +83,7 @@
                 e.stopPropagation();
             });
 
-            axios.get(`http://localhost:5000/healthCheck`)
+            axios.get(`http://localhost:5555/healthCheck`)
                 .then((resp) => {
                     const { sdk, version } = resp.data;
                     document.querySelector(`.nav-header #logo-${sdk}`).classList.toggle('hidden');

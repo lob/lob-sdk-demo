@@ -11,19 +11,19 @@ services:
     depends_on:
       - web-ui
     environment:
-      PORT: 5000
+      PORT: 5555
       LOB_API_KEY: ${LOB_API_KEY}
       LOB_LIVE_API_KEY: ${LOB_LIVE_API_KEY}
     ports:
-      - "5000:5000"
+      - "5555:5555"
 
   typescript-demo:
     build: typescript/.
     depends_on:
       - web-ui
     environment:
-      PORT: 5000
+      PORT: 5555
       LOB_API_KEY: ${LOB_API_KEY}
       LOB_LIVE_API_KEY: ${LOB_LIVE_API_KEY}
     ports:
-      - "5000:5000"
+      - "5555:5555"

@@ -120,7 +120,7 @@
                 data = Object.assign({}, data, {[ele.name]: ele.value});
             }
             try {
-                const {data: bankAccounts} = await axios.post(`http://localhost:5000/bank_accounts`, data);
+                const {data: bankAccounts} = await axios.post(`http://localhost:5555/bank_accounts`, data);
                 document.getElementById("loading-overlay").classList.add("hide-overlay");
                 const nodes = document.querySelectorAll("code");
                 nodes[0].innerText = JSON.stringify(bankAccounts.createdAccount, null, 2);

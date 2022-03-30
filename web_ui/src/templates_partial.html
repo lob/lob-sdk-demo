@@ -102,7 +102,7 @@
                 data = Object.assign({}, data, {[ele.name]: ele.value});
             }
             try {
-                const {data: templates} = await axios.post(`http://localhost:5000/templates`, data);
+                const {data: templates} = await axios.post(`http://localhost:5555/templates`, data);
                 document.getElementById("loading-overlay").classList.add("hide-overlay");
                 const nodes = document.querySelectorAll("code");
                 nodes[0].innerText = JSON.stringify(templates.createdTemplate, null, 2);
