@@ -9,57 +9,54 @@ const FileStore = require('session-file-store')(session);
 const packageJson = require('../package.json');
 
 import {
-        Configuration,
-        Address,
-        AddressesApi, 
-        AddressEditable, 
-        AddressDeletion, 
-        AddressList,
-        BankAccountsApi, 
-        BankAccountVerify,
-        BankAccountWritable,
-        BankTypeEnum,
-        ChecksApi, 
-        CheckEditable,
-        IntlVerificationsApi, 
-        IntlVerificationWritable, 
-        CountryExtended,
-        IntlVerificationsPayload,
-        Letter,
-        LetterList,
-        LetterDeletion, 
-        LettersApi, 
-        LetterEditable,
-        Postcard, 
-        PostcardsApi, 
-        PostcardList, 
-        PostcardDeletion,
-        ReverseGeocodeLookupsApi, 
-        Location,
-        SelfMailer, 
-        SelfMailerList, 
-        SelfMailerDeletion, 
-        SelfMailersApi, 
-        SelfMailerEditable,
-        TemplatesApi, 
-        TemplateWritable, 
-        TemplateUpdate, 
-        TemplateVersionWritable, 
-        TemplateVersionUpdatable, 
-        TemplateVersionsApi,
-        USAutocompletionsApi, 
-        UsAutocompletionsWritable,
-        UsVerification, 
-        UsVerifications, 
-        USVerificationsApi,
-        UsVerificationsWritable, 
-        MultipleComponentsList, 
-        MultipleComponents,
-        ZipLookupsApi,
-        Zip, 
-        ZipEditable,
-        MultipleComponentsIntl
-    } from "@lob/lob-typescript-sdk";
+    Configuration,
+    AddressesApi,
+    AddressEditable,
+    BankAccountsApi,
+    BankAccountVerify,
+    BankAccountWritable,
+    BankTypeEnum,
+    ChecksApi,
+    CheckEditable,
+    IntlVerificationsApi,
+    IntlVerificationWritable,
+    CountryExtended,
+    IntlVerificationsPayload,
+    Letter,
+    LetterList,
+    LetterDeletion,
+    LettersApi,
+    LetterEditable,
+    Postcard,
+    PostcardsApi,
+    PostcardList,
+    PostcardDeletion,
+    ReverseGeocodeLookupsApi,
+    Location,
+    SelfMailer,
+    SelfMailerList,
+    SelfMailerDeletion,
+    SelfMailersApi,
+    SelfMailerEditable,
+    TemplatesApi,
+    TemplateWritable,
+    TemplateUpdate,
+    TemplateVersionWritable,
+    TemplateVersionUpdatable,
+    TemplateVersionsApi,
+    UsAutocompletionsApi,
+    UsAutocompletionsWritable,
+    UsVerification,
+    UsVerifications,
+    UsVerificationsApi,
+    UsVerificationsWritable,
+    MultipleComponentsList,
+    MultipleComponents,
+    ZipLookupsApi,
+    Zip,
+    ZipEditable,
+    MultipleComponentsIntl, IntlAutocompletionsApi
+} from "@lob/lob-typescript-sdk";
 
 const config: Configuration = new Configuration({
     username: process.env.LOB_API_KEY
@@ -98,10 +95,10 @@ class App {
       }
 
     private async createTemplateForVersions(): Promise<string> {
-        const templateData: TemplateWritable = {
+        const templateData = new TemplateWritable({
             description: "Newer Template",
             html: "<html>Updated HTML for {{name}}</html>"
-        };
+        });
         let id = "";
         try {
             const result = await new TemplatesApi(config).create(templateData);
@@ -143,7 +140,17 @@ class App {
                 res.status(200).send({
                     ok: true,
                     sdk: 'typescript',
-                    version: packageJson.dependencies["@lob/lob-typescript-sdk"]
+                    version: packageJson.dependencies["@lob/lob-typescript-sdk"],
+                    supportedResources: [
+                        'ADDRESSES',
+                        'BANK_ACCOUNTS',
+                        'CHECKS',
+                        'LETTERS',
+                        'POSTCARDS',
+                        'SELF_MAILERS',
+                        'TEMPLATES',
+                        'TEMPLATE_VERSIONS',
+                    ]
                 });
             } catch (err: any) {
                 res.status(500).send();
@@ -157,15 +164,15 @@ class App {
             const addressData = new AddressEditable(req.body);
             try {
                 // only create is assigned to a new object, as 
-                const createAddress : Address = await Addresses.create(addressData);
-                const getAddress : Address = await Addresses.get(createAddress.id);
-                const listAddresses : AddressList = await Addresses.list(2);
-                const deleteAddress : AddressDeletion = await Addresses.delete(createAddress.id);
+                const createAddress = await Addresses.create(addressData);
+                const getAddress = await Addresses.get(createAddress.id);
+                const listAddresses = await Addresses.list(2);
+                const deleteAddress = await Addresses.delete(createAddress.id);
                 res.status(200).send({
-                    createdAddress: createAddress,
-                    retrievedAddress: getAddress,
-                    listedAddresses: listAddresses,
-                    deletedAddress: deleteAddress
+                    createdAddress: createAddress.toString(),
+                    retrievedAddress: getAddress.toString(),
+                    listedAddresses: listAddresses.toString(),
+                    deletedAddress: deleteAddress.toString()
                 });
             } catch (err: any) {
                 console.error(err.message);
@@ -182,8 +189,8 @@ class App {
             const addressData = new AddressEditable(req.body);
             try {
                 // only create is assigned to a new object, as 
-                const createAddress : Address = await Addresses.create(addressData);
-                res.status(200).send(createAddress);
+                const createAddress = await Addresses.create(addressData);
+                res.status(200).send(createAddress.toString());
             } catch (err: any) {
                 console.error(err.message);
                 res.status(502).send({
@@ -461,8 +468,8 @@ class App {
         // Address Verification
         router.get("/us_verifications", async (req: Request, res: Response) => {
             // verify a US address
-           const UsVerifications = new USVerificationsApi(av_config);
-           let verificationData1: UsVerificationsWritable = {  
+           const UsVerifications = new UsVerificationsApi(av_config);
+           let verificationData1: UsVerificationsWritable = {
                primary_line: "001 CEMETERY LANE",
                city: "WESTFIELD",
                state: "NJ",
@@ -474,17 +481,57 @@ class App {
                 state: "NJ",
                 zip_code: "07090"
             };
-            let addressList = new MultipleComponentsList ({
-            addresses: [verificationData1, verificationData2]
-            });
+            let addressList: MultipleComponentsList;
            if (req.body.addresses) {
-            addressList = new MultipleComponentsList (req.body);
+                addressList = new MultipleComponentsList(req.body);
            } else {
+               addressList = new MultipleComponentsList ({
+                   addresses: [verificationData1, verificationData2]
+               });
                verificationData1 = new MultipleComponents(req.body);
            }
             try {
                 const singleVerified : UsVerification = await UsVerifications.verifySingle(verificationData1);
                 const bulkVerified : UsVerifications = await UsVerifications.verifyBulk(addressList);
+                res.status(200).send({
+                    singleVerify: singleVerified,
+                    bulkVerify: bulkVerified
+                });
+            } catch (err: any) {
+                console.error(err.message);
+                res.status(502).send({
+                    message: err.message || "unknown error",
+                    status: err.response.status || 500,
+                    statusText: err.response.statusText || "Unknown_Error"
+                });
+            }
+        });
+
+        router.get("/intl_autocompletions", async (req: Request, res: Response) => {
+            // verify a non-US address
+            const IntlAuto = new IntlAutocompletionsApi(av_config);
+            let verificationData1: IntlVerificationWritable = {
+                primary_line: "370 WATER ST",
+                postal_code: "C1N 1C4",
+                country: CountryExtended.Ca
+            };
+            const verificationData2: IntlVerificationWritable = {
+                primary_line: "012 PLACEHOLDER ST",
+                postal_code: "F0O 8A2",
+                country: CountryExtended.Ca
+            };
+            let addressList = new IntlVerificationsPayload({
+                addresses: [verificationData1, verificationData2]
+            });
+            if (req.body.addresses) {
+                addressList = new IntlVerificationsPayload(req.body);
+            } else {
+                verificationData1 = new MultipleComponentsIntl(req.body);
+            }
+            try {
+                // ToDo: correct once v 0.0.8 is published
+                const singleVerified = await IntlAuto.Autocomplete(verificationData1);
+                const bulkVerified = await IntlAuto.Autocomplete(addressList);
                 res.status(200).send({
                     singleVerify: singleVerified,
                     bulkVerify: bulkVerified
@@ -539,10 +586,10 @@ class App {
 
         router.get("/us_autocompletions", async (req: Request, res: Response) => {
             // autocomplete partial address data
-            const UsAutocompletions = new USAutocompletionsApi(av_config);
+            const UsAutoCompletions = new UsAutocompletionsApi(av_config);
             const autocompletionData = new UsAutocompletionsWritable(req.body);
             try {
-                const autocompletedAddresses = await UsAutocompletions.autocomplete(autocompletionData);
+                const autocompletedAddresses = await UsAutoCompletions.autocomplete(autocompletionData);
                 res.status(200).send( {
                     autocompleted: autocompletedAddresses
                 });
