@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<checkstyle version="8.39">
-<file name="/Users/benny-kitchell/Documents/lob/demo/src/main/java/com/example/App.java">
-<error line="6" column="9" severity="error" message="Comment has incorrect indentation level 8, expected is 0, indentation should be the same level as line 14." source="com.puppycrawl.tools.checkstyle.checks.indentation.CommentsIndentationCheck"/>
-<error line="30" severity="error" message="Line has trailing spaces." source="com.puppycrawl.tools.checkstyle.checks.regexp.RegexpSinglelineCheck"/>
-<error line="37" severity="error" message="Line has trailing spaces." source="com.puppycrawl.tools.checkstyle.checks.regexp.RegexpSinglelineCheck"/>
-<error line="49" column="1" severity="error" message="Comment has incorrect indentation level 0, expected is 4, indentation should be the same level as line 50." source="com.puppycrawl.tools.checkstyle.checks.indentation.CommentsIndentationCheck"/>
-</file>
-</checkstyle>
