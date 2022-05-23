@@ -70,9 +70,12 @@ h2, h4 {
 }
 
 /*Menu*/
-.menu-items, .menu-items a {
+.menu-items, .menu-items div.btn-nav {
     color: white;
     text-decoration: none;
+}
+.menu-items div.btn-nav.unsupported {
+    color: red;
 }
 
 .menu-items > ul {
@@ -112,30 +115,7 @@ h2, h4 {
 }
 
 .nav-section {
-    display: none;
-}
-
-.open-nav {
     display: block;
-}
-
-.open-caret {
-    display: none;
-    cursor: default;
-    float: right;
-}
-
-.closed-caret {
-    float: right;
-    cursor: default;
-}
-
-.open-caret {
-    display: block;
-}
-
-.closed-caret {
-    display: none;
 }
 
 @media only screen and (max-width: 600px) {

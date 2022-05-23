@@ -202,6 +202,7 @@ class App {
         });
 
         router.post("/bank_accounts", async (req: Request, res: Response) => {
+            // ToDo: Map values from input
             // create, get, list, delete bank account
             const BankAccounts = new BankAccountsApi(config);
             let bankData = new BankAccountWritable({
