@@ -77,6 +77,9 @@ h2, h4 {
 .menu-items div.btn-nav.unsupported {
     color: red;
 }
+.menu-items div.btn-nav:not(.unsupported) {
+    cursor: pointer;
+}
 
 .menu-items > ul {
     padding-left: 2em;
@@ -110,7 +113,6 @@ h2, h4 {
 }
 
 .api-section {
-    cursor: pointer;
     margin-bottom: 1em;
 }
 

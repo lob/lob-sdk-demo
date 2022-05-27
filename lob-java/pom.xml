@@ -35,7 +35,7 @@
     <dependency>
       <groupId>com.lob</groupId>
       <artifactId>lob-java</artifactId>
-      <version>13.0.1-rc</version>
+      <version>13.0.0-rc-2</version>
     </dependency>
     <dependency>
       <groupId>org.junit.jupiter</groupId>
@@ -89,11 +89,6 @@
           </execution>
         </executions>
       </plugin>
-<!--      <plugin>-->
-<!--        <groupId>org.apache.maven.plugins</groupId>-->
-<!--        <artifactId>maven-surefire-plugin</artifactId>-->
-<!--        <version>${maven-surefire-plugin.version}</version>-->
-<!--      </plugin>-->
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-jar-plugin</artifactId>
@@ -106,32 +101,10 @@
           </archive>
         </configuration>
       </plugin>
-<!--      <plugin>-->
-<!--        <groupId>org.jacoco</groupId>-->
-<!--        <artifactId>jacoco-maven-plugin</artifactId>-->
-<!--        <version>${jacoco-maven-plugin.version}</version>-->
-<!--        <executions>-->
-<!--          <execution>-->
-<!--            <id>pre-unit-test</id>-->
-<!--            <goals>-->
-<!--              <goal>prepare-agent</goal>-->
-<!--            </goals>-->
-<!--          </execution>-->
-<!--        </executions>-->
-<!--      </plugin>-->
       <plugin>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-maven-plugin</artifactId>
       </plugin>
     </plugins>
   </build>
-<!--  <reporting>-->
-<!--    <plugins>-->
-<!--      <plugin>-->
-<!--        <groupId>org.apache.maven.plugins</groupId>-->
-<!--        <artifactId>maven-javadoc-plugin</artifactId>-->
-<!--        <version>${maven-javadoc-plugin.version}</version>-->
-<!--      </plugin>-->
-<!--    </plugins>-->
-<!--  </reporting>-->
 </project>

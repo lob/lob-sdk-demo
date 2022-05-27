@@ -4,6 +4,21 @@ import org.openapitools.client.model.*;
 
 public class ResponseModels {
 
+    static class HealthCheckResponse {
+        private Boolean ok;
+        public Boolean getOk() { return this.ok; }
+        public void setOk(Boolean ok) { this.ok = ok; };
+        private String sdk;
+        public String getSdk() { return this.sdk; }
+        public void setSdk(String sdk) { this.sdk = sdk; };
+        private String version;
+        public String getVersion() { return this.version; }
+        public void setVersion(String version) { this.version = version; };
+        private String[] supportedResources;
+        public String[] getSupportedResources() { return this.supportedResources; }
+        public void setSupportedResources(String[] supportedResources) { this.supportedResources = supportedResources; };
+    }
+
     static class AddressesResponse {
         private Address createdAddress;
         public Address getCreatedAddress() { return this.createdAddress; }
@@ -158,5 +173,40 @@ public class ResponseModels {
         private TemplateVersionDeletion deletedVersion;
         public TemplateVersionDeletion getDeletedVersion() { return this.deletedVersion; }
         public void setDeletedVersion(TemplateVersionDeletion templateVersion) { this.deletedVersion = templateVersion; }
+    }
+
+    static class UsVerificationsResponse {
+        private UsVerification singleVerify;
+        public UsVerification getSingleVerify() { return this.singleVerify; }
+        public void setSingleVerify(UsVerification verify) { this.singleVerify = verify; }
+
+        private UsVerifications bulkVerify;
+        public UsVerifications getBulkVerify() { return this.bulkVerify; }
+        public void setBulkVerify(UsVerifications bulkVerify) { this.bulkVerify = bulkVerify; }
+
+    }
+
+    static class UsAutoCompleteResponse {
+        private UsAutocompletions autocompleted;
+        public UsAutocompletions getAutocompleted() { return this.autocompleted; }
+        public void setAutocompleted(UsAutocompletions usAutoCompletion) { this.autocompleted = usAutoCompletion; }
+    }
+
+    static class IntlAutoCompleteResponse {
+        private IntlAutocompletions autocompleted;
+        public IntlAutocompletions getAutocompleted() { return this.autocompleted; }
+        public void setAutocompleted(IntlAutocompletions intlAutoCompletion) { this.autocompleted = intlAutoCompletion; }
+    }
+
+    static class ReverseGeocodeLookupResponse {
+        private ReverseGeocode geocode;
+        public ReverseGeocode getGeocode() { return this.geocode; }
+        public void setGeocode(ReverseGeocode geocode) { this.geocode = geocode; }
+    }
+
+    static class ZipLookupResponse {
+        private Zip lookup;
+        public Zip getLookup() { return this.lookup; }
+        public void setLookup(Zip lookup) { this.lookup = lookup; }
     }
 }

@@ -43,16 +43,14 @@
                     <li><div class="btn-nav" id="btn-nav-TEMPLATE_VERSIONS"onclick="handleNavigation(NavTargets.TemplateVersions)">Template Versions</div></li>
                 </div>
 
-    <!-- Removed AV Options because they are not yet implemented -->
-    <!--            <hr>-->
-    <!--            <h4 class='api-section' data-api='av-api'>Address Verifications <span class='open-caret'>></span><span class='closed-caret'>^</span></h4>-->
-    <!--            <div class='nav-section' id='av-api'>-->
-    <!--                <li><a href="/intl_verifications">International Verifications</a></li>-->
-    <!--                <li><a href="/reverse_geocode_lookups">Reverse Geocode Lookups</a></li>-->
-    <!--                <li><a href="/us_autocompletions">US Autocompletions</a></li>-->
-    <!--                <li><a href="/us_verifications">US Verifications</a></li>-->
-    <!--                <li><a href="/zip_lookups">US Zip Lookups</a></li>-->
-    <!--            </div>-->
+                <h4 class='api-section' data-api='av-api'>Address Verifications</h4>
+                <div class='nav-section' id='av-api'>
+                    <li><div class="btn-nav" id="btn-nav-INTL_AUTOCOMPLETE" onclick="handleNavigation(NavTargets.IntlAutocomplete)">International Autocomplete</div></li>
+                    <li><div class="btn-nav" id="btn-nav-US_AUTOCOMPLETE" onclick="handleNavigation(NavTargets.UsAutocomplete)">US Autocomplete</div></li>
+                    <li><div class="btn-nav" id="btn-nav-US_VERIFICATIONS" onclick="handleNavigation(NavTargets.UsVerifications)">US Verifications</div></li>
+                    <li><div class="btn-nav" id="btn-nav-REVERSE_GEOCODE_LOOKUP" onclick="handleNavigation(NavTargets.ReverseGeocodeLookup)">Reverse Geocode Lookup</div></li>
+                    <li><div class="btn-nav" id="btn-nav-ZIP_LOOKUP" onclick="handleNavigation(NavTargets.ZipLookup)">Zip Lookup</div></li>
+                </div>
             </ul>
         </nav>
         <div class='core-content'>
@@ -80,6 +78,11 @@
             SelfMailers: 'SELF_MAILERS',
             Templates: 'TEMPLATES',
             TemplateVersions: 'TEMPLATE_VERSIONS',
+            UsVerifications: 'US_VERIFICATIONS',
+            UsAutocomplete: 'US_AUTOCOMPLETE',
+            IntlAutocomplete: 'INTL_AUTOCOMPLETE',
+            ReverseGeocodeLookup: 'REVERSE_GEOCODE_LOOKUP',
+            ZipLookup: 'ZIP_LOOKUP'
         };
 
         $(document).ready(() => {

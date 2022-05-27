@@ -1,6 +1,5 @@
 package com.example;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.lob.api.ApiClient;
 import com.lob.api.ApiException;
 import com.lob.api.Configuration;
@@ -38,22 +37,7 @@ public class RouteControllers {
             produces = "application/json"
     )
     public ResponseEntity<String> healthCheck() {
-        class HealthCheckResponse {
-            private Boolean ok;
-            public Boolean getOk() { return this.ok; }
-            public void setOk(Boolean ok) { this.ok = ok; };
-            private String sdk;
-            public String getSdk() { return this.sdk; }
-            public void setSdk(String sdk) { this.sdk = sdk; };
-            private String version;
-            public String getVersion() { return this.version; }
-            public void setVersion(String version) { this.version = version; };
-            private String[] supportedResources;
-            public String[] getSupportedResources() { return this.supportedResources; }
-            public void setSupportedResources(String[] supportedResources) { this.supportedResources = supportedResources; };
-        }
-
-        HealthCheckResponse responseBody = new HealthCheckResponse();
+        ResponseModels.HealthCheckResponse responseBody = new ResponseModels.HealthCheckResponse();
         responseBody.setOk(true);
         responseBody.setSdk("java");
         responseBody.setVersion("13.0.0");
@@ -65,7 +49,12 @@ public class RouteControllers {
                 "POSTCARDS",
                 "SELF_MAILERS",
                 "TEMPLATES",
-                "TEMPLATE_VERSIONS"
+                "TEMPLATE_VERSIONS",
+                "US_VERIFICATIONS",
+                "US_AUTOCOMPLETE",
+
+                "REVERSE_GEOCODE_LOOKUP",
+                "ZIP_LOOKUP"
         });
 
         ObjectMapper objectMapper = new ObjectMapper();
@@ -471,61 +460,61 @@ public class RouteControllers {
             e.printStackTrace();
         }
 
-//        try {
-//            AddressEditable addressTo = new AddressEditable();
-//            addressTo.setName("Harry Zhang");
-//            addressTo.setCompany("Lob");
-//            addressTo.setEmail("harry@lob.com");
-//            addressTo.setPhone("5555555555");
-//            addressTo.setAddressLine1("210 King St");
-//            addressTo.setAddressLine2("# 6100");
-//            addressTo.setAddressCity("San Francisco");
-//            addressTo.setAddressState("CA");
-//            addressTo.setAddressZip("94107");
-//            addressTo.setAddressCountry(CountryExtended.US);
-//
-//            AddressEditable addressFrom = new AddressEditable();
-//            addressFrom.setName("Harry Zhang");
-//            addressFrom.setCompany("Lob");
-//            addressFrom.setEmail("harry@lob.com");
-//            addressFrom.setPhone("5555555555");
-//            addressFrom.setAddressLine1("210 King St");
-//            addressFrom.setAddressLine2("# 6100");
-//            addressFrom.setAddressCity("San Francisco");
-//            addressFrom.setAddressState("CA");
-//            addressFrom.setAddressZip("94107");
-//            addressFrom.setAddressCountry(CountryExtended.US);
-//
-//            LetterEditable letterRaw = new LetterEditable();
-//            letterRaw.setDescription("demo");
-//            letterRaw.setTo(addressTo);
-//            letterRaw.setFrom(addressFrom);
-//            letterRaw.setFile("https://s3-us-west-2.amazonaws.com/public.lob.com/assets/us_letter_1pg.pdf");
-//            letterRaw.setColor(true);
-//            letterRaw.setExtraService(LetterEditable.ExtraServiceEnum.CERTIFIED);
-//
-//            Letter letter = apiInstance.create(letterRaw, null);
-//        } catch (ApiException e) {
-//            e.printStackTrace();
-//        }
+        try {
+            AddressEditable addressTo = new AddressEditable();
+            addressTo.setName("Harry Zhang");
+            addressTo.setCompany("Lob");
+            addressTo.setEmail("harry@lob.com");
+            addressTo.setPhone("5555555555");
+            addressTo.setAddressLine1("210 King St");
+            addressTo.setAddressLine2("# 6100");
+            addressTo.setAddressCity("San Francisco");
+            addressTo.setAddressState("CA");
+            addressTo.setAddressZip("94107");
+            addressTo.setAddressCountry(CountryExtended.US);
 
-//        try {
-//            Letter letter = apiInstance.get("ltr_4868c3b754655f90");
-//        } catch (ApiException e) {
-//            e.printStackTrace();
-//        }
+            AddressEditable addressFrom = new AddressEditable();
+            addressFrom.setName("Harry Zhang");
+            addressFrom.setCompany("Lob");
+            addressFrom.setEmail("harry@lob.com");
+            addressFrom.setPhone("5555555555");
+            addressFrom.setAddressLine1("210 King St");
+            addressFrom.setAddressLine2("# 6100");
+            addressFrom.setAddressCity("San Francisco");
+            addressFrom.setAddressState("CA");
+            addressFrom.setAddressZip("94107");
+            addressFrom.setAddressCountry(CountryExtended.US);
 
-//        try {
-//            LetterList letters = apiInstance.list(2, null, null, null, null, null, null, null, null, null, null);
-//        } catch (ApiException e) {
-//            e.printStackTrace();
-//        }
+            LetterEditable letterRaw = new LetterEditable();
+            letterRaw.setDescription("demo");
+            letterRaw.setTo(addressTo);
+            letterRaw.setFrom(addressFrom);
+            letterRaw.setFile("https://s3-us-west-2.amazonaws.com/public.lob.com/assets/us_letter_1pg.pdf");
+            letterRaw.setColor(true);
+            letterRaw.setExtraService(LetterEditable.ExtraServiceEnum.CERTIFIED);
 
-//        try {
-//            LetterDeletion letter = apiInstance.cancel("ltr_4868c3b754655f90");
-//        } catch (ApiException e) {
-//            e.printStackTrace();
-//        }
+            Letter letter = apiInstance.create(letterRaw, null);
+        } catch (ApiException e) {
+            e.printStackTrace();
+        }
+
+        try {
+            Letter letter = apiInstance.get("ltr_4868c3b754655f90");
+        } catch (ApiException e) {
+            e.printStackTrace();
+        }
+
+        try {
+            LetterList letters = apiInstance.list(2, null, null, null, null, null, null, null, null, null, null);
+        } catch (ApiException e) {
+            e.printStackTrace();
+        }
+
+        try {
+            LetterDeletion letter = apiInstance.cancel("ltr_4868c3b754655f90");
+        } catch (ApiException e) {
+            e.printStackTrace();
+        }
 
         return new ResponseEntity<String>(jsonInString, status);
     }
@@ -881,6 +870,276 @@ public class RouteControllers {
 
 //        try {
 //            AddressDeletion address = apiInstance.delete("adr_fa85158b26c3eb7c");
+//        } catch (ApiException e) {
+//            e.printStackTrace();
+//        }
+
+        return new ResponseEntity<String>(jsonInString, status);
+    }
+
+    @RequestMapping(
+            value = "/us_verifications",
+            method = RequestMethod.POST,
+            produces = "application/json",
+            consumes = "application/json"
+    )
+    @ResponseBody
+    public ResponseEntity<String> usVerifications(@RequestBody String body) {
+        UsVerificationsApi apiInstance = new UsVerificationsApi(this.lobClient);
+
+        ObjectMapper objectMapper = new ObjectMapper();
+        String jsonInString = "{}";
+        HttpStatus status = HttpStatus.OK;
+        try {
+            // Read input values
+            JSONObject inputObj = new JSONObject(body);
+
+            UsVerificationsWritable singleVerify = new UsVerificationsWritable();
+            singleVerify.setPrimaryLine(inputObj.getString("single_primary_line"));
+            if (inputObj.has("single_secondary_line")) {
+                singleVerify.setSecondaryLine(inputObj.getString("single_secondary_line"));
+            }
+            singleVerify.setCity(inputObj.getString("single_city"));
+            singleVerify.setState(inputObj.getString("single_state"));
+            singleVerify.setZipCode(inputObj.getString("single_zip_code"));
+
+            MultipleComponentsList bulkVerify = new MultipleComponentsList();
+            MultipleComponents bulkAddress1 = new MultipleComponents();
+            bulkAddress1.setPrimaryLine(inputObj.getString("bulk1_primary_line"));
+            if (inputObj.has("bulk1_secondary_line")) {
+                bulkAddress1.setSecondaryLine(inputObj.getString("bulk1_secondary_line"));
+            }
+            bulkAddress1.setCity(inputObj.getString("bulk1_city"));
+            bulkAddress1.setState(inputObj.getString("bulk1_state"));
+            bulkAddress1.setZipCode(inputObj.getString("bulk1_zip_code"));
+
+            MultipleComponents bulkAddress2 = new MultipleComponents();
+            bulkAddress2.setPrimaryLine(inputObj.getString("bulk2_primary_line"));
+            if (inputObj.has("bulk2_secondary_line")) {
+                bulkAddress2.setSecondaryLine(inputObj.getString("bulk2_secondary_line"));
+            }
+            bulkAddress2.setCity(inputObj.getString("bulk2_city"));
+            bulkAddress2.setState(inputObj.getString("bulk2_state"));
+            bulkAddress2.setZipCode(inputObj.getString("bulk2_zip_code"));
+
+            bulkVerify.addAddressesItem(bulkAddress1);
+            bulkVerify.addAddressesItem(bulkAddress2);
+
+            // Operations
+            ResponseModels.UsVerificationsResponse responseBody = new ResponseModels.UsVerificationsResponse();
+            responseBody.setSingleVerify(apiInstance.verifySingle(singleVerify, null));
+            responseBody.setBulkVerify(apiInstance.verifyBulk(bulkVerify, null));
+
+            jsonInString = objectMapper.writeValueAsString(responseBody);
+        } catch (IOException | ApiException e) {
+            status = HttpStatus.INTERNAL_SERVER_ERROR;
+            e.printStackTrace();
+        }
+
+//        try {
+//            UsVerificationsWritable singleVerify = new UsVerificationsWritable();
+//            singleVerify.setPrimaryLine("210 King Street");
+//            singleVerify.setCity("San Francisco");
+//            singleVerify.setState("CA");
+//            singleVerify.setZipCode("94107");
+//
+//            UsVerification verified = apiInstance.verifySingle(singleVerify, null);
+//        } catch (ApiException e) {
+//            e.printStackTrace();
+//        }
+
+//        try {
+//            MultipleComponentsList bulkVerify = new MultipleComponentsList();
+//            MultipleComponents address = new MultipleComponents();
+//            address.setPrimaryLine("210 King Street");
+//            address.setCity("San Francisco");
+//            address.setState("CA");
+//            address.setZipCode("94107");
+//
+//            bulkVerify.addAddressesItem(address);
+//            apiInstance.verifyBulk(bulkVerify, null);
+//        } catch (ApiException e) {
+//            e.printStackTrace();
+//        }
+
+        return new ResponseEntity<String>(jsonInString, status);
+    }
+
+    @RequestMapping(
+            value = "/us_autocompletions",
+            method = RequestMethod.POST,
+            produces = "application/json",
+            consumes = "application/json"
+    )
+    @ResponseBody
+    public ResponseEntity<String> usAutoCompletions(@RequestBody String body) {
+        UsAutocompletionsApi apiInstance = new UsAutocompletionsApi(this.lobClient);
+
+        ObjectMapper objectMapper = new ObjectMapper();
+        String jsonInString = "{}";
+        HttpStatus status = HttpStatus.OK;
+        try {
+            // Read input values
+            JSONObject inputObj = new JSONObject(body);
+
+            UsAutocompletionsWritable autoCompletionWritable = new UsAutocompletionsWritable();
+            autoCompletionWritable.setAddressPrefix(inputObj.getString("address_prefix"));
+            autoCompletionWritable.setCity(inputObj.getString("city"));
+            autoCompletionWritable.setState(inputObj.getString("state"));
+            autoCompletionWritable.setZipCode(inputObj.getString("zip_code"));
+
+            // Operations
+            ResponseModels.UsAutoCompleteResponse responseBody = new ResponseModels.UsAutoCompleteResponse();
+            responseBody.setAutocompleted(apiInstance.autocomplete(autoCompletionWritable));
+
+            jsonInString = objectMapper.writeValueAsString(responseBody);
+        } catch (IOException | ApiException e) {
+            status = HttpStatus.INTERNAL_SERVER_ERROR;
+            e.printStackTrace();
+        }
+
+//        try {
+//            UsAutocompletionsWritable autoCompletionWritable = new UsAutocompletionsWritable();
+//            autoCompletionWritable.setAddressPrefix("185 B");
+//            autoCompletionWritable.setCity("San Francisco");
+//            autoCompletionWritable.setState("CA");
+//            autoCompletionWritable.setZipCode("94107");
+//
+//            apiInstance.autocomplete(autoCompletionWritable);
+//        } catch (ApiException e) {
+//            e.printStackTrace();
+//        }
+
+        return new ResponseEntity<String>(jsonInString, status);
+    }
+
+    @RequestMapping(
+            value = "/intl_autocompletions",
+            method = RequestMethod.POST,
+            produces = "application/json",
+            consumes = "application/json"
+    )
+    @ResponseBody
+    public ResponseEntity<String> intlAutoCompletions(@RequestBody String body) {
+        IntlAutocompletionsApi apiInstance = new IntlAutocompletionsApi(this.lobClient);
+
+        ObjectMapper objectMapper = new ObjectMapper();
+        String jsonInString = "{}";
+        HttpStatus status = HttpStatus.OK;
+        try {
+            // Read input values
+            JSONObject inputObj = new JSONObject(body);
+
+            IntlAutocompletionsWritable autoCompletionWritable = new IntlAutocompletionsWritable();
+            autoCompletionWritable.setAddressPrefix(inputObj.getString("address_prefix"));
+            autoCompletionWritable.setCity(inputObj.getString("city"));
+            autoCompletionWritable.setState(inputObj.getString("state"));
+            autoCompletionWritable.setZipCode(inputObj.getString("zip_code"));
+
+            // Operations
+            ResponseModels.IntlAutoCompleteResponse responseBody = new ResponseModels.IntlAutoCompleteResponse();
+            responseBody.setAutocompleted(apiInstance.autocomplete(autoCompletionWritable, null));
+
+            jsonInString = objectMapper.writeValueAsString(responseBody);
+        } catch (IOException | ApiException e) {
+            status = HttpStatus.INTERNAL_SERVER_ERROR;
+            e.printStackTrace();
+        }
+
+//        try {
+//            IntlAutocompletionsWritable autoCompletionWritable = new IntlAutocompletionsWritable();
+//            autoCompletionWritable.setAddressPrefix("185 B");
+//            autoCompletionWritable.setCity("San Francisco");
+//            autoCompletionWritable.setState("CA");
+//            autoCompletionWritable.setZipCode("94107");
+//
+//            apiInstance.autocomplete(autoCompletionWritable, null);
+//        } catch (ApiException e) {
+//            e.printStackTrace();
+//        }
+
+        return new ResponseEntity<String>(jsonInString, status);
+    }
+
+    @RequestMapping(
+            value = "/reverse_geocode_lookups",
+            method = RequestMethod.POST,
+            produces = "application/json",
+            consumes = "application/json"
+    )
+    @ResponseBody
+    public ResponseEntity<String> geoCodeLookup(@RequestBody String body) {
+        ReverseGeocodeLookupsApi apiInstance = new ReverseGeocodeLookupsApi(this.lobClient);
+
+        ObjectMapper objectMapper = new ObjectMapper();
+        String jsonInString = "{}";
+        HttpStatus status = HttpStatus.OK;
+        try {
+            // Read input values
+            JSONObject inputObj = new JSONObject(body);
+
+            Location location = new Location();
+            location.setLatitude(inputObj.getFloat("latitude"));
+            location.setLongitude(inputObj.getFloat("longitude"));
+
+            // Operations
+            ResponseModels.ReverseGeocodeLookupResponse responseBody = new ResponseModels.ReverseGeocodeLookupResponse();
+            responseBody.setGeocode(apiInstance.lookup(location, null));
+
+            jsonInString = objectMapper.writeValueAsString(responseBody);
+        } catch (IOException | ApiException e) {
+            status = HttpStatus.INTERNAL_SERVER_ERROR;
+            e.printStackTrace();
+        }
+
+//        try {
+//            Location location = new Location();
+//            location.setLatitude(37.7749f);
+//            location.setLongitude(122.4194f);
+//
+//            apiInstance.lookup(location, null);
+//        } catch (ApiException e) {
+//            e.printStackTrace();
+//        }
+
+        return new ResponseEntity<String>(jsonInString, status);
+    }
+
+    @RequestMapping(
+            value = "/zip_lookups",
+            method = RequestMethod.POST,
+            produces = "application/json",
+            consumes = "application/json"
+    )
+    @ResponseBody
+    public ResponseEntity<String> zipLookup(@RequestBody String body) {
+        ZipLookupsApi apiInstance = new ZipLookupsApi(this.lobClient);
+
+        ObjectMapper objectMapper = new ObjectMapper();
+        String jsonInString = "{}";
+        HttpStatus status = HttpStatus.OK;
+        try {
+            // Read input values
+            JSONObject inputObj = new JSONObject(body);
+
+            ZipEditable zipEditable = new ZipEditable();
+            zipEditable.setZipCode(inputObj.getString("zip_code"));
+
+            // Operations
+            ResponseModels.ZipLookupResponse responseBody = new ResponseModels.ZipLookupResponse();
+            responseBody.setLookup(apiInstance.lookup(zipEditable));
+
+            jsonInString = objectMapper.writeValueAsString(responseBody);
+        } catch (IOException | ApiException e) {
+            status = HttpStatus.INTERNAL_SERVER_ERROR;
+            e.printStackTrace();
+        }
+
+//        try {
+//            ZipEditable zipEditable = new ZipEditable();
+//            zipEditable.setZipCode("94107");
+//
+//            apiInstance.lookup(zipEditable);
 //        } catch (ApiException e) {
 //            e.printStackTrace();
 //        }
