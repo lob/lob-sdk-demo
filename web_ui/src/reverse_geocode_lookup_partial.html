@@ -16,8 +16,13 @@
 <form id="templates_form">
     <ul class="wrapper">
         <li class="form-row">
-            <label for="zip_code">Address Line 1: </label>
-            <input id="zip_code" type="text" name="zip_code" value="94107">
+            <label for="latitude">Latitude: </label>
+            <input id="latitude" type="number" name="latitude" value="37.7749">
+        </li>
+
+        <li class="form-row">
+            <label for="longitude">Longitude: </label>
+            <input id="longitude" type="number" name="longitude" value="122.4194">
         </li>
 
         <li class="button">
@@ -33,7 +38,7 @@
 
 <hr>
 <div>
-    <h4>ZIP LOOKUP:</h4>
+    <h4>REVERSE GEOCODE LOOKUP:</h4>
     <pre>
       <code class='language-javascript'>
         <p> TEST PLACEHOLDER </p>
@@ -71,10 +76,10 @@
                 data = Object.assign({}, data, {[ele.name]: ele.value});
             }
             try {
-                const {data: verification} = await axios.post(`http://localhost:5555/zip_lookups`, data);
+                const {data: lookup} = await axios.post(`http://localhost:5555/reverse_geocode_lookups`, data);
                 document.getElementById("loading-overlay").classList.add("hide-overlay");
                 const nodes = document.querySelectorAll("code");
-                nodes[0].innerText = JSON.stringify(verification.lookup, null, 2);
+                nodes[0].innerText = JSON.stringify(lookup.geocode, null, 2);
             } catch (err) {
                 document.getElementById("loading-overlay").classList.add("hide-overlay");
                 document.querySelector(`.message-error`).classList.remove('hidden');

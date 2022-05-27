@@ -52,7 +52,7 @@ public class RouteControllers {
                 "TEMPLATE_VERSIONS",
                 "US_VERIFICATIONS",
                 "US_AUTOCOMPLETE",
-
+                "INTL_AUTOCOMPLETE",
                 "REVERSE_GEOCODE_LOOKUP",
                 "ZIP_LOOKUP"
         });
@@ -495,6 +495,7 @@ public class RouteControllers {
 
             Letter letter = apiInstance.create(letterRaw, null);
         } catch (ApiException e) {
+            System.out.println(e);
             e.printStackTrace();
         }
 
@@ -1035,6 +1036,8 @@ public class RouteControllers {
             autoCompletionWritable.setCity(inputObj.getString("city"));
             autoCompletionWritable.setState(inputObj.getString("state"));
             autoCompletionWritable.setZipCode(inputObj.getString("zip_code"));
+            // ToDo: Defect deserializing the response
+            autoCompletionWritable.setCountry(CountryExtended.fromValue(inputObj.getString("country")));
 
             // Operations
             ResponseModels.IntlAutoCompleteResponse responseBody = new ResponseModels.IntlAutoCompleteResponse();
@@ -1069,6 +1072,7 @@ public class RouteControllers {
     )
     @ResponseBody
     public ResponseEntity<String> geoCodeLookup(@RequestBody String body) {
+        // ToDo: The response on this does not look correct
         ReverseGeocodeLookupsApi apiInstance = new ReverseGeocodeLookupsApi(this.lobClient);
 
         ObjectMapper objectMapper = new ObjectMapper();
@@ -1079,8 +1083,8 @@ public class RouteControllers {
             JSONObject inputObj = new JSONObject(body);
 
             Location location = new Location();
-            location.setLatitude(inputObj.getFloat("latitude"));
-            location.setLongitude(inputObj.getFloat("longitude"));
+            location.setLatitude(Float.parseFloat(inputObj.getString("latitude")));
+            location.setLongitude(Float.parseFloat(inputObj.getString("longitude")));
 
             // Operations
             ResponseModels.ReverseGeocodeLookupResponse responseBody = new ResponseModels.ReverseGeocodeLookupResponse();

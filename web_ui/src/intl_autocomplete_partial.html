@@ -12,25 +12,31 @@
         <img src="Assets/200w.webp"/>
     </div>
 </div>
-<h2>US Auto Complete</h2>
+<h2>International Auto Complete</h2>
 <form id="templates_form">
     <ul class="wrapper">
         <li class="form-row">
             <label for="address_prefix">Address Prefix: </label>
-            <input id="address_prefix" type="text" name="address_prefix" value="185 B">
+            <input id="address_prefix" type="text" name="address_prefix" value="340 Wat">
         </li>
         <li class="form-row">
             <label for="city">Address City: </label>
-            <input id="city" type="text" name="city" value="San Francisco">
+            <input id="city" type="text" name="city" value="Summerside">
         </li>
         <li class="form-row">
             <label for="state">Address State: </label>
-            <input id="state" type="text" name="state" value="CA">
+            <input id="state" type="text" name="state" value="Prince Edward Island">
         </li>
         <li class="form-row">
             <label for="zip_code">Address Zip: </label>
-            <input id="zip_code" type="text" name="zip_code" value="94107">
+            <input id="zip_code" type="text" name="zip_code" value="C1N 1C4">
         </li>
+        <li class="form-row">
+            <label for="country">Address Country: </label>
+            <input id="country" type="text" name="country" value="CA">
+        </li>
+        country
+
 
         <li class="button">
             <input type="submit" value="OK"/>
@@ -83,7 +89,7 @@
                 data = Object.assign({}, data, {[ele.name]: ele.value});
             }
             try {
-                const {data: verification} = await axios.post(`http://localhost:5555/us_autocompletions`, data);
+                const {data: verification} = await axios.post(`http://localhost:5555/intl_autocompletions`, data);
                 document.getElementById("loading-overlay").classList.add("hide-overlay");
                 const nodes = document.querySelectorAll("code");
                 nodes[0].innerText = JSON.stringify(verification.autocompleted, null, 2);
