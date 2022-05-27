@@ -62,7 +62,17 @@ class App {
                 res.status(200).send({
                     ok: true,
                     sdk: 'node',
-                    version: packageJson.dependencies["lob"]
+                    version: packageJson.dependencies["lob"],
+                    supportedResources: [
+                        'ADDRESSES',
+                        'BANK_ACCOUNTS',
+                        'CHECKS',
+                        'LETTERS',
+                        'POSTCARDS',
+                        'SELF_MAILERS',
+                        'TEMPLATES',
+                        'TEMPLATE_VERSIONS',
+                    ]
                 });
             } catch (err) {
                 res.status(500).send();
