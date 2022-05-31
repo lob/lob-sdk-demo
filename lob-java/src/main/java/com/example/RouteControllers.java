@@ -752,31 +752,33 @@ public class RouteControllers {
         }
 
 //        try {
-//            AddressEditable addressRaw = new AddressEditable();
-//            addressRaw.setName("Harry Zhang");
-//            addressRaw.setCompany("Lob");
-//            addressRaw.setEmail("harry@lob.com");
-//            addressRaw.setPhone("5555555555");
-//            addressRaw.setAddressLine1("210 King St");
-//            addressRaw.setAddressLine2("# 6100");
-//            addressRaw.setAddressCity("San Francisco");
-//            addressRaw.setAddressState("CA");
-//            addressRaw.setAddressZip("94107");
-//            addressRaw.setAddressCountry(CountryExtended.US);
+//            TemplateWritable templateWritable = new TemplateWritable();
+//            templateWritable.setDescription("demo");
+//            templateWritable.setHtml("<html>HTML for {{name}}</html>");
 //
-//            Address address = apiInstance.create(addressRaw);
+//            Template template = apiInstance.create(templateWritable);
 //        } catch (ApiException e) {
 //            e.printStackTrace();
 //        }
 
 //        try {
-//            Address address = apiInstance.get("adr_fa85158b26c3eb7c");
+//            Template template = apiInstance.get("tmpl_c94e83ca2cd5121");
 //        } catch (ApiException e) {
 //            e.printStackTrace();
 //        }
 
 //        try {
-//            AddressList addresses = apiInstance.list(2, null, null, null, null, null);
+//            TemplateList templates = apiInstance.list(2, null, null, null, null, null);
+//        } catch (ApiException e) {
+//            e.printStackTrace();
+//        }
+
+//        try {
+//            TemplateUpdate templateUpdate = new TemplateUpdate();
+//            templateUpdate.setDescription("Updated Example");
+//            templateUpdate.setPublishedVersion("vrsn_a");
+//
+//            Template template = apiInstance.update("tmpl_c94e83ca2cd5121", templateUpdate);
 //        } catch (ApiException e) {
 //            e.printStackTrace();
 //        }
@@ -840,37 +842,38 @@ public class RouteControllers {
         }
 
 //        try {
-//            AddressEditable addressRaw = new AddressEditable();
-//            addressRaw.setName("Harry Zhang");
-//            addressRaw.setCompany("Lob");
-//            addressRaw.setEmail("harry@lob.com");
-//            addressRaw.setPhone("5555555555");
-//            addressRaw.setAddressLine1("210 King St");
-//            addressRaw.setAddressLine2("# 6100");
-//            addressRaw.setAddressCity("San Francisco");
-//            addressRaw.setAddressState("CA");
-//            addressRaw.setAddressZip("94107");
-//            addressRaw.setAddressCountry(CountryExtended.US);
+//            TemplateVersionWritable templateVersionWritable = new TemplateVersionWritable();
+//            templateVersionWritable.setDescription("Some Description");
+//            templateVersionWritable.setHtml("<html>HTML for {{name}}</html>");
 //
-//            Address address = apiInstance.create(addressRaw);
+//            TemplateVersion templateVersion = apiInstance.create("tmpl_c94e83ca2cd5121", templateVersionWritable);
 //        } catch (ApiException e) {
 //            e.printStackTrace();
 //        }
 
 //        try {
-//            Address address = apiInstance.get("adr_fa85158b26c3eb7c");
+//            TemplateVersion templateVersion = apiInstance.get("tmpl_c94e83ca2cd5121", "vrsn_534e339882d2282");
 //        } catch (ApiException e) {
 //            e.printStackTrace();
 //        }
 
 //        try {
-//            AddressList addresses = apiInstance.list(2, null, null, null, null, null);
+//            TemplateVersionList templateVersions = apiInstance.list("tmpl_c94e83ca2cd5121", 2, null, null, null, null);
 //        } catch (ApiException e) {
 //            e.printStackTrace();
 //        }
 
 //        try {
-//            AddressDeletion address = apiInstance.delete("adr_fa85158b26c3eb7c");
+//            TemplateVersionUpdatable templateUpdate = new TemplateVersionUpdatable();
+//            templateUpdate.setDescription("updated template");
+//
+//            TemplateVersion templateVersion = apiInstance.update("tmpl_c94e83ca2cd5121", "vrsn_534e339882d2282", templateUpdate);
+//        } catch (ApiException e) {
+//            e.printStackTrace();
+//        }
+
+//        try {
+//            TemplateVersionDeletion templateVersion = apiInstance.delete("tmpl_c94e83ca2cd5121", "vrsn_534e339882d2282");
 //        } catch (ApiException e) {
 //            e.printStackTrace();
 //        }
@@ -1036,7 +1039,7 @@ public class RouteControllers {
             autoCompletionWritable.setCity(inputObj.getString("city"));
             autoCompletionWritable.setState(inputObj.getString("state"));
             autoCompletionWritable.setZipCode(inputObj.getString("zip_code"));
-            // ToDo: Defect deserializing the response
+            // ToDo: Defect deserializing the response DXP-1028
             autoCompletionWritable.setCountry(CountryExtended.fromValue(inputObj.getString("country")));
 
             // Operations
@@ -1072,7 +1075,7 @@ public class RouteControllers {
     )
     @ResponseBody
     public ResponseEntity<String> geoCodeLookup(@RequestBody String body) {
-        // ToDo: The response on this does not look correct
+        // ToDo: The response on this does not look correct DXP-1029
         ReverseGeocodeLookupsApi apiInstance = new ReverseGeocodeLookupsApi(this.lobClient);
 
         ObjectMapper objectMapper = new ObjectMapper();
