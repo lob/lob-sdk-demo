@@ -69,9 +69,7 @@ class App {
                         'CHECKS',
                         'LETTERS',
                         'POSTCARDS',
-                        'SELF_MAILERS',
-                        'TEMPLATES',
-                        'TEMPLATE_VERSIONS',
+                        'SELF_MAILERS'
                     ]
                 });
             } catch (err) {
