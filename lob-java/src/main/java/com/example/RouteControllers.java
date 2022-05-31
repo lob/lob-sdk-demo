@@ -1081,7 +1081,6 @@ public class RouteControllers {
     )
     @ResponseBody
     public ResponseEntity<String> geoCodeLookup(@RequestBody String body) {
-        // ToDo: The response on this does not look correct DXP-1029
         ReverseGeocodeLookupsApi apiInstance = new ReverseGeocodeLookupsApi(this.lobClient);
 
         ObjectMapper objectMapper = new ObjectMapper();
