@@ -22,6 +22,7 @@ import java.util.stream.Collectors;
 public class RouteControllers {
 
     private final ApiClient lobClient;
+    private final ApiClient lobClientLive;
 
     RouteControllers() {
         ApiClient client = Configuration.getDefaultApiClient();
@@ -29,6 +30,12 @@ public class RouteControllers {
         basicAuth.setUsername(System.getenv("LOB_API_TEST_KEY"));
 
         this.lobClient = client;
+
+        ApiClient clientLive = Configuration.getDefaultApiClient();
+        HttpBasicAuth basicAuthForLive = (HttpBasicAuth) client.getAuthentication("basicAuth");
+        basicAuthForLive.setUsername(System.getenv("LOB_API_LIVE_KEY"));
+
+        this.lobClientLive = clientLive;
     }
 
     @RequestMapping(
@@ -1025,7 +1032,7 @@ public class RouteControllers {
     )
     @ResponseBody
     public ResponseEntity<String> intlAutoCompletions(@RequestBody String body) {
-        IntlAutocompletionsApi apiInstance = new IntlAutocompletionsApi(this.lobClient);
+        IntlAutocompletionsApi apiInstance = new IntlAutocompletionsApi(this.lobClientLive);
 
         ObjectMapper objectMapper = new ObjectMapper();
         String jsonInString = "{}";
@@ -1039,7 +1046,6 @@ public class RouteControllers {
             autoCompletionWritable.setCity(inputObj.getString("city"));
             autoCompletionWritable.setState(inputObj.getString("state"));
             autoCompletionWritable.setZipCode(inputObj.getString("zip_code"));
-            // ToDo: Defect deserializing the response DXP-1028
             autoCompletionWritable.setCountry(CountryExtended.fromValue(inputObj.getString("country")));
 
             // Operations
