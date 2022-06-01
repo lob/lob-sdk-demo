@@ -1,0 +1,5 @@
+{
+    "require": {
+        "lob/lob-php": "4.0.0-rc-3"
+    }
+}
