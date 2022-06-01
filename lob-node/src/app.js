@@ -7,7 +7,7 @@ const session = require("express-session");
 const FileStore = require('session-file-store')(session);
 
 const LobRaw = require('lob');
-const Lob = LobRaw(process.env.LOB_API_KEY);
+const Lob = LobRaw(process.env.LOB_API_TEST_KEY);
 
 const packageJson = require('../package.json');
 

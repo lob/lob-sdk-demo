@@ -59,11 +59,11 @@ import {
 } from "@lob/lob-typescript-sdk";
 
 const config: Configuration = new Configuration({
-    username: process.env.LOB_API_KEY
+    username: process.env.LOB_API_TEST_KEY
 });
 
 const av_config: Configuration = new Configuration({
-    username: process.env.LOB_API_KEY
+    username: process.env.LOB_API_TEST_KEY
 });
 
 class App {

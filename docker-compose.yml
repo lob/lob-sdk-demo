@@ -12,8 +12,8 @@ services:
       - web-ui
     environment:
       PORT: 5555
-      LOB_API_KEY: ${LOB_API_KEY}
-      LOB_LIVE_API_KEY: ${LOB_LIVE_API_KEY}
+      LOB_API_TEST_KEY: ${LOB_API_TEST_KEY}
+      LOB_API_LIVE_KEY: ${LOB_API_LIVE_KEY}
     ports:
       - "5555:5555"
 
@@ -23,7 +23,7 @@ services:
       - web-ui
     environment:
       PORT: 5555
-      LOB_API_KEY: ${LOB_API_KEY}
-      LOB_LIVE_API_KEY: ${LOB_LIVE_API_KEY}
+      LOB_API_TEST_KEY: ${LOB_API_TEST_KEY}
+      LOB_API_LIVE_KEY: ${LOB_API_LIVE_KEY}
     ports:
       - "5555:5555"
