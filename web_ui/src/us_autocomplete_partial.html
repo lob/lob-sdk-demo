@@ -1,7 +1,7 @@
 <!doctype html>
 <html>
 <head>
-    <title>Template Version Partial</title>
+    <title>Templates Partial</title>
     <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.10/styles/default.min.css">
     <link rel="stylesheet" href="shared_form.css">
 </head>
@@ -12,17 +12,26 @@
         <img src="Assets/200w.webp"/>
     </div>
 </div>
-<h2>Template Versions</h2>
-<form id="template_versions_form">
+<h2>US Auto Complete</h2>
+<form id="templates_form">
     <ul class="wrapper">
         <li class="form-row">
-            <label for="description">Description: </label>
-            <input id="description" type="text" name="description" value="Newer Version">
+            <label for="address_prefix">Address Prefix: </label>
+            <input id="address_prefix" type="text" name="address_prefix" value="185 B">
         </li>
         <li class="form-row">
-            <label for="html">HTML: </label>
-            <input id="html" type="text" name="html" value="<html>HTML for {{name}}</html>">
+            <label for="city">Address City: </label>
+            <input id="city" type="text" name="city" value="San Francisco">
         </li>
+        <li class="form-row">
+            <label for="state">Address State: </label>
+            <input id="state" type="text" name="state" value="CA">
+        </li>
+        <li class="form-row">
+            <label for="zip_code">Address Zip: </label>
+            <input id="zip_code" type="text" name="zip_code" value="94107">
+        </li>
+
         <li class="button">
             <input type="submit" value="OK"/>
         </li>
@@ -36,41 +45,13 @@
 
 <hr>
 <div>
-    <h4>CREATED:</h4>
+    <h4>AUTO COMPLETED:</h4>
     <pre>
-          <code class='language-javascript'>
-            <p> TEST PLACEHOLDER </p>
-          </code>
-        </pre>
+      <code class='language-javascript'>
+        <p> TEST PLACEHOLDER </p>
+      </code>
+    </pre>
     <hr>
-
-    <h4>RETRIEVED:</h4>
-    <pre>
-          <code class='language-javascript'>
-            <p> TEST PLACEHOLDER </p>
-          </code>
-        </pre>
-    <hr>
-
-    <h4>LISTED:</h4>
-    <pre>
-          <code class='language-javascript'>
-            <p> TEST PLACEHOLDER </p>
-          </code>
-        </pre>
-    <h4>UPDATED:</h4>
-    <pre>
-          <code class='language-javascript'>
-            <p> TEST PLACEHOLDER </p>
-          </code>
-        </pre>
-
-    <h4>DELETED:</h4>
-    <pre>
-          <code class='language-javascript'>
-            <p> TEST PLACEHOLDER </p>
-          </code>
-        </pre>
 </div>
 
 </body>
@@ -83,9 +64,9 @@
 <script>hljs.initHighlightingOnLoad();</script>
 <script>
     $(document).ready(() => {
-        const form = document.querySelector("#template_versions_form");
+        const form = document.querySelector("#templates_form");
         if (!form) {
-            console.warn('Unable to find form: #template_versions_forms');
+            console.warn('Unable to find form: #templates_form');
             return;
         }
         form.onsubmit = async (event) => {
@@ -102,15 +83,10 @@
                 data = Object.assign({}, data, {[ele.name]: ele.value});
             }
             try {
-                const {data: vrsn} = await axios.post(`http://localhost:5555/template_versions`, data);
+                const {data: verification} = await axios.post(`http://localhost:5555/us_autocompletions`, data);
                 document.getElementById("loading-overlay").classList.add("hide-overlay");
                 const nodes = document.querySelectorAll("code");
-
-                nodes[0].innerText = JSON.stringify(vrsn.createdVersion, null, 2);
-                nodes[1].innerText = JSON.stringify(vrsn.retrievedVersion, null, 2);
-                nodes[2].innerText = JSON.stringify(vrsn.listedVersions, null, 2);
-                nodes[3].innerText = JSON.stringify(vrsn.updatedVersion, null, 2);
-                nodes[4].innerText = JSON.stringify(vrsn.deletedVersion, null, 2);
+                nodes[0].innerText = JSON.stringify(verification.autocompleted, null, 2);
             } catch (err) {
                 document.getElementById("loading-overlay").classList.add("hide-overlay");
                 document.querySelector(`.message-error`).classList.remove('hidden');

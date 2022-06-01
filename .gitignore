@@ -1,4 +1,5 @@
 node_modules
-LOCAL.env
 .idea
 */**/.DS_Store
+
+lob-java/target
