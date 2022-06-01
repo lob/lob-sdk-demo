@@ -63,7 +63,7 @@ const config: Configuration = new Configuration({
 });
 
 const av_config: Configuration = new Configuration({
-    username: process.env.LOB_API_TEST_KEY
+    username: process.env.LOB_API_LIVE_KEY
 });
 
 class App {
