@@ -71,6 +71,10 @@
     </ul>
     <ul class="wrapper">
         <li class="form-row">
+            <label for="description">Description: </label>
+            <input id="description" type="text" name="description" value="Test Description">
+        </li>
+        <li class="form-row">
             <label for="color">Color (true or false): </label>
             <input id="color" type="text" name="color" value="true">
         </li>
@@ -178,7 +182,8 @@
                     from: letter_from_address._id || letter_from_address.id,
                     color: data.color,
                     extra_service: data.extra_service,
-                    file: data.file
+                    file: data.file,
+                    description: data.description
                 };
                 const {data: letters} = await axios.post(`http://localhost:5555/letters`, lettersData);
                 document.getElementById("loading-overlay").classList.add("hide-overlay");

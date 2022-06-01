@@ -59,11 +59,11 @@ import {
 } from "@lob/lob-typescript-sdk";
 
 const config: Configuration = new Configuration({
-    username: process.env.LOB_API_KEY
+    username: process.env.LOB_API_TEST_KEY
 });
 
 const av_config: Configuration = new Configuration({
-    username: process.env.LOB_API_KEY
+    username: process.env.LOB_API_LIVE_KEY
 });
 
 class App {
@@ -169,10 +169,10 @@ class App {
                 const listAddresses = await Addresses.list(2);
                 const deleteAddress = await Addresses.delete(createAddress.id);
                 res.status(200).send({
-                    createdAddress: createAddress.toString(),
-                    retrievedAddress: getAddress.toString(),
-                    listedAddresses: listAddresses.toString(),
-                    deletedAddress: deleteAddress.toString()
+                    createdAddress: createAddress,
+                    retrievedAddress: getAddress,
+                    listedAddresses: listAddresses,
+                    deletedAddress: deleteAddress
                 });
             } catch (err: any) {
                 console.error(err.message);
@@ -190,7 +190,7 @@ class App {
             try {
                 // only create is assigned to a new object, as 
                 const createAddress = await Addresses.create(addressData);
-                res.status(200).send(createAddress.toString());
+                res.status(200).send(createAddress);
             } catch (err: any) {
                 console.error(err.message);
                 res.status(502).send({
@@ -202,6 +202,7 @@ class App {
         });
 
         router.post("/bank_accounts", async (req: Request, res: Response) => {
+            // ToDo: Map values from input
             // create, get, list, delete bank account
             const BankAccounts = new BankAccountsApi(config);
             let bankData = new BankAccountWritable({
@@ -466,182 +467,183 @@ class App {
         });
 
         // Address Verification
-        router.get("/us_verifications", async (req: Request, res: Response) => {
-            // verify a US address
-           const UsVerifications = new UsVerificationsApi(av_config);
-           let verificationData1: UsVerificationsWritable = {
-               primary_line: "001 CEMETERY LANE",
-               city: "WESTFIELD",
-               state: "NJ",
-               zip_code: "07090"
-             };
-             const verificationData2: UsVerificationsWritable = {
-                primary_line: "1515 CEMETERY LN",
-                city: "WESTFIELD",
-                state: "NJ",
-                zip_code: "07090"
-            };
-            let addressList: MultipleComponentsList;
-           if (req.body.addresses) {
-                addressList = new MultipleComponentsList(req.body);
-           } else {
-               addressList = new MultipleComponentsList ({
-                   addresses: [verificationData1, verificationData2]
-               });
-               verificationData1 = new MultipleComponents(req.body);
-           }
-            try {
-                const singleVerified : UsVerification = await UsVerifications.verifySingle(verificationData1);
-                const bulkVerified : UsVerifications = await UsVerifications.verifyBulk(addressList);
-                res.status(200).send({
-                    singleVerify: singleVerified,
-                    bulkVerify: bulkVerified
-                });
-            } catch (err: any) {
-                console.error(err.message);
-                res.status(502).send({
-                    message: err.message || "unknown error",
-                    status: err.response.status || 500,
-                    statusText: err.response.statusText || "Unknown_Error"
-                });
-            }
-        });
-
-        router.get("/intl_autocompletions", async (req: Request, res: Response) => {
-            // verify a non-US address
-            const IntlAuto = new IntlAutocompletionsApi(av_config);
-            let verificationData1: IntlVerificationWritable = {
-                primary_line: "370 WATER ST",
-                postal_code: "C1N 1C4",
-                country: CountryExtended.Ca
-            };
-            const verificationData2: IntlVerificationWritable = {
-                primary_line: "012 PLACEHOLDER ST",
-                postal_code: "F0O 8A2",
-                country: CountryExtended.Ca
-            };
-            let addressList = new IntlVerificationsPayload({
-                addresses: [verificationData1, verificationData2]
-            });
-            if (req.body.addresses) {
-                addressList = new IntlVerificationsPayload(req.body);
-            } else {
-                verificationData1 = new MultipleComponentsIntl(req.body);
-            }
-            try {
-                // ToDo: correct once v 0.0.8 is published
-                const singleVerified = await IntlAuto.Autocomplete(verificationData1);
-                const bulkVerified = await IntlAuto.Autocomplete(addressList);
-                res.status(200).send({
-                    singleVerify: singleVerified,
-                    bulkVerify: bulkVerified
-                });
-            } catch (err: any) {
-                console.error(err.message);
-                res.status(502).send({
-                    message: err.message || "unknown error",
-                    status: err.response.status || 500,
-                    statusText: err.response.statusText || "Unknown_Error"
-                });
-            }
-        });
-
-        router.get("/intl_verifications", async (req: Request, res: Response) => {
-            // verify a non-US address
-            const IntlVerifications = new IntlVerificationsApi(av_config);
-            let verificationData1: IntlVerificationWritable = {
-                primary_line: "370 WATER ST",
-                postal_code: "C1N 1C4",
-                country: CountryExtended.Ca
-            };
-            const verificationData2: IntlVerificationWritable = {
-                primary_line: "012 PLACEHOLDER ST",
-                postal_code: "F0O 8A2",
-                country: CountryExtended.Ca
-            };
-            let addressList = new IntlVerificationsPayload({
-                addresses: [verificationData1, verificationData2]
-            });
-            if (req.body.addresses) {
-                addressList = new IntlVerificationsPayload(req.body);
-               } else {
-                   verificationData1 = new MultipleComponentsIntl(req.body);
-               }
-            try {
-                const singleVerified = await IntlVerifications.verifySingle(verificationData1);
-                const bulkVerified = await IntlVerifications.verifyBulk(addressList);
-                res.status(200).send({
-                    singleVerify: singleVerified,
-                    bulkVerify: bulkVerified
-                });
-            } catch (err: any) {
-                console.error(err.message);
-                res.status(502).send({
-                    message: err.message || "unknown error",
-                    status: err.response.status || 500,
-                    statusText: err.response.statusText || "Unknown_Error"
-                });
-            }
-        });
-
-        router.get("/us_autocompletions", async (req: Request, res: Response) => {
-            // autocomplete partial address data
-            const UsAutoCompletions = new UsAutocompletionsApi(av_config);
-            const autocompletionData = new UsAutocompletionsWritable(req.body);
-            try {
-                const autocompletedAddresses = await UsAutoCompletions.autocomplete(autocompletionData);
-                res.status(200).send( {
-                    autocompleted: autocompletedAddresses
-                });
-            } catch (err: any) {
-                console.error(err.message);
-                res.status(502).send({
-                    message: err.message || "unknown error",
-                    status: err.response.status || 500,
-                    statusText: err.response.statusText || "Unknown_Error"
-                });
-            }
-        });
-
-        router.get("/reverse_geocode_lookups", async (req: Request, res: Response) => {
-            // look up a latitude and longitude
-            const ReverseGeocodeLookup = new ReverseGeocodeLookupsApi(av_config);
-            const coordinates = new Location(req.body);
-
-            try {
-                const geocode = await ReverseGeocodeLookup.lookup(coordinates);
-                res.status(200).send( {
-                    geocode: geocode
-                });
-            } catch (err: any) {
-                console.error(err.message);
-                res.status(502).send({
-                    message: err.message || "unknown error",
-                    status: err.response.status || 500,
-                    statusText: err.response.statusText || "Unknown_Error"
-                });
-            }
-        });
-
-        router.get("/zip_lookups", async (req: Request, res: Response) => {
-            // look up a zip code
-            const ZipLookup = new ZipLookupsApi(av_config);
-            const zipRequest: ZipEditable = req.body;
-
-            try {
-                const zipLookup : Zip = await ZipLookup.lookup(zipRequest);
-                res.status(200).send({
-                    lookup: zipLookup
-                });
-            } catch (err: any) {
-                console.error(err.message);
-                res.status(502).send({
-                    message: err.message || "unknown error",
-                    status: err.response.status || 500,
-                    statusText: err.response.statusText || "Unknown_Error"
-                });
-            }
-        });
+        // router.get("/us_verifications", async (req: Request, res: Response) => {
+        //     // verify a US address
+        //    const UsVerifications = new UsVerificationsApi(av_config);
+        //    let verificationData1 = new UsVerificationsWritable({
+        //        primary_line: "001 CEMETERY LANE",
+        //        city: "WESTFIELD",
+        //        state: "NJ",
+        //        zip_code: "07090"
+        //      });
+        //      const verificationData2 = new UsVerificationsWritable({
+        //         primary_line: "1515 CEMETERY LN",
+        //         city: "WESTFIELD",
+        //         state: "NJ",
+        //         zip_code: "07090"
+        //     });
+        //     let addressList: MultipleComponentsList;
+        //     if (req.body.addresses) {
+        //         addressList = new MultipleComponentsList(req.body);
+        //     } else {
+        //        addressList = new MultipleComponentsList ({
+        //            addresses: [verificationData1, verificationData2]
+        //        });
+        //        verificationData1 = new MultipleComponents(req.body);
+        //    }
+        //     try {
+        //         const singleVerified : UsVerification = await UsVerifications.verifySingle(verificationData1);
+        //         const bulkVerified : UsVerifications = await UsVerifications.verifyBulk(addressList);
+        //         res.status(200).send({
+        //             singleVerify: singleVerified,
+        //             bulkVerify: bulkVerified
+        //         });
+        //     } catch (err: any) {
+        //         console.error(err.message);
+        //         res.status(502).send({
+        //             message: err.message || "unknown error",
+        //             status: err.response.status || 500,
+        //             statusText: err.response.statusText || "Unknown_Error"
+        //         });
+        //     }
+        // });
+        //
+        // router.get("/intl_autocompletions", async (req: Request, res: Response) => {
+        //     // ToDo: This resource is incorrect
+        //     // verify a non-US address
+        //     const IntlAuto = new IntlAutocompletionsApi(av_config);
+        //     let verificationData1: IntlVerificationWritable = {
+        //         primary_line: "370 WATER ST",
+        //         postal_code: "C1N 1C4",
+        //         country: CountryExtended.Ca
+        //     };
+        //     const verificationData2: IntlVerificationWritable = {
+        //         primary_line: "012 PLACEHOLDER ST",
+        //         postal_code: "F0O 8A2",
+        //         country: CountryExtended.Ca
+        //     };
+        //     let addressList = new IntlVerificationsPayload({
+        //         addresses: [verificationData1, verificationData2]
+        //     });
+        //     if (req.body.addresses) {
+        //         addressList = new IntlVerificationsPayload(req.body);
+        //     } else {
+        //         verificationData1 = new MultipleComponentsIntl(req.body);
+        //     }
+        //     try {
+        //         // ToDo: correct once v 0.0.8 is published
+        //         const singleVerified = await IntlAuto.Autocomplete(verificationData1);
+        //         const bulkVerified = await IntlAuto.Autocomplete(addressList);
+        //         res.status(200).send({
+        //             singleVerify: singleVerified,
+        //             bulkVerify: bulkVerified
+        //         });
+        //     } catch (err: any) {
+        //         console.error(err.message);
+        //         res.status(502).send({
+        //             message: err.message || "unknown error",
+        //             status: err.response.status || 500,
+        //             statusText: err.response.statusText || "Unknown_Error"
+        //         });
+        //     }
+        // });
+        //
+        // router.get("/intl_verifications", async (req: Request, res: Response) => {
+        //     // verify a non-US address
+        //     const IntlVerifications = new IntlVerificationsApi(av_config);
+        //     let verificationData1: IntlVerificationWritable = {
+        //         primary_line: "370 WATER ST",
+        //         postal_code: "C1N 1C4",
+        //         country: CountryExtended.Ca
+        //     };
+        //     const verificationData2: IntlVerificationWritable = {
+        //         primary_line: "012 PLACEHOLDER ST",
+        //         postal_code: "F0O 8A2",
+        //         country: CountryExtended.Ca
+        //     };
+        //     let addressList = new IntlVerificationsPayload({
+        //         addresses: [verificationData1, verificationData2]
+        //     });
+        //     if (req.body.addresses) {
+        //         addressList = new IntlVerificationsPayload(req.body);
+        //        } else {
+        //            verificationData1 = new MultipleComponentsIntl(req.body);
+        //        }
+        //     try {
+        //         const singleVerified = await IntlVerifications.verifySingle(verificationData1);
+        //         const bulkVerified = await IntlVerifications.verifyBulk(addressList);
+        //         res.status(200).send({
+        //             singleVerify: singleVerified,
+        //             bulkVerify: bulkVerified
+        //         });
+        //     } catch (err: any) {
+        //         console.error(err.message);
+        //         res.status(502).send({
+        //             message: err.message || "unknown error",
+        //             status: err.response.status || 500,
+        //             statusText: err.response.statusText || "Unknown_Error"
+        //         });
+        //     }
+        // });
+        //
+        // router.get("/us_autocompletions", async (req: Request, res: Response) => {
+        //     // autocomplete partial address data
+        //     const UsAutoCompletions = new UsAutocompletionsApi(av_config);
+        //     const autocompletionData = new UsAutocompletionsWritable(req.body);
+        //     try {
+        //         const autocompletedAddresses = await UsAutoCompletions.autocomplete(autocompletionData);
+        //         res.status(200).send( {
+        //             autocompleted: autocompletedAddresses
+        //         });
+        //     } catch (err: any) {
+        //         console.error(err.message);
+        //         res.status(502).send({
+        //             message: err.message || "unknown error",
+        //             status: err.response.status || 500,
+        //             statusText: err.response.statusText || "Unknown_Error"
+        //         });
+        //     }
+        // });
+        //
+        // router.get("/reverse_geocode_lookups", async (req: Request, res: Response) => {
+        //     // look up a latitude and longitude
+        //     const ReverseGeocodeLookup = new ReverseGeocodeLookupsApi(av_config);
+        //     const coordinates = new Location(req.body);
+        //
+        //     try {
+        //         const geocode = await ReverseGeocodeLookup.lookup(coordinates);
+        //         res.status(200).send( {
+        //             geocode: geocode
+        //         });
+        //     } catch (err: any) {
+        //         console.error(err.message);
+        //         res.status(502).send({
+        //             message: err.message || "unknown error",
+        //             status: err.response.status || 500,
+        //             statusText: err.response.statusText || "Unknown_Error"
+        //         });
+        //     }
+        // });
+        //
+        // router.get("/zip_lookups", async (req: Request, res: Response) => {
+        //     // look up a zip code
+        //     const ZipLookup = new ZipLookupsApi(av_config);
+        //     const zipRequest: ZipEditable = req.body;
+        //
+        //     try {
+        //         const zipLookup : Zip = await ZipLookup.lookup(zipRequest);
+        //         res.status(200).send({
+        //             lookup: zipLookup
+        //         });
+        //     } catch (err: any) {
+        //         console.error(err.message);
+        //         res.status(502).send({
+        //             message: err.message || "unknown error",
+        //             status: err.response.status || 500,
+        //             statusText: err.response.statusText || "Unknown_Error"
+        //         });
+        //     }
+        // });
     }
 }
 

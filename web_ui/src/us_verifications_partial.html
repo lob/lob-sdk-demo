@@ -1,0 +1,161 @@
+<!doctype html>
+<html>
+<head>
+    <title>Templates Partial</title>
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.10/styles/default.min.css">
+    <link rel="stylesheet" href="shared_form.css">
+</head>
+<body>
+<div class="loading-overlay hide-overlay" id="loading-overlay"
+     style="z-index:5; opacity: 45%; width: 100vw; height: 100vh;">
+    <div class="loading-overlay-image-container  hide-gif" id="loading-overlay-image-container ">
+        <img src="Assets/200w.webp"/>
+    </div>
+</div>
+<h2>US Verifications</h2>
+<form id="templates_form">
+    <ul class="wrapper">Single
+        <li class="form-row">
+            <label for="single_primary_line">Address Line 1: </label>
+            <input id="single_primary_line" type="text" name="single_primary_line" value="210 King Street">
+        </li>
+        <li class="form-row">
+            <label for="single_secondary_line">Address Line 2: </label>
+            <input id="single_secondary_line" type="text" name="single_secondary_line" value="">
+        </li>
+        <li class="form-row">
+            <label for="single_city">Address City: </label>
+            <input id="single_city" type="text" name="single_city" value="San Francisco">
+        </li>
+        <li class="form-row">
+            <label for="single_state">Address State: </label>
+            <input id="single_state" type="text" name="single_state" value="CA">
+        </li>
+        <li class="form-row">
+            <label for="single_zip_code">Address Zip Code: </label>
+            <input id="single_zip_code" type="text" name="single_zip_code" value="94107">
+        </li>
+    </ul>
+
+    <ul class="wrapper">Bulk 1
+        <li class="form-row">
+            <label for="bulk1_primary_line">Address Line 1: </label>
+            <input id="bulk1_primary_line" type="text" name="bulk1_primary_line" value="210 King Street">
+        </li>
+        <li class="form-row">
+            <label for="bulk1_secondary_line">Address Line 2: </label>
+            <input id="bulk1_secondary_line" type="text" name="bulk1_secondary_line" value="">
+        </li>
+        <li class="form-row">
+            <label for="bulk1_city">Address City: </label>
+            <input id="bulk1_city" type="text" name="bulk1_city" value="San Francisco">
+        </li>
+        <li class="form-row">
+            <label for="bulk1_state">Address State: </label>
+            <input id="bulk1_state" type="text" name="bulk1_state" value="CA">
+        </li>
+        <li class="form-row">
+            <label for="bulk1_zip_code">Address Zip Code: </label>
+            <input id="bulk1_zip_code" type="text" name="bulk1_zip_code" value="94107">
+        </li>
+    </ul>
+
+    <ul class="wrapper">Bulk 2
+        <li class="form-row">
+            <label for="bulk2_primary_line">Address Line 1: </label>
+            <input id="bulk2_primary_line" type="text" name="bulk2_primary_line" value="Ave Wilson Churchill 123">
+        </li>
+        <li class="form-row">
+            <label for="bulk2_secondary_line">Address Line 2: </label>
+            <input id="bulk2_secondary_line" type="text" name="bulk2_secondary_line" value="">
+        </li>
+        <li class="form-row">
+            <label for="bulk2_city">Address City: </label>
+            <input id="bulk2_city" type="text" name="bulk2_city" value="RIO PIEDRA">
+        </li>
+        <li class="form-row">
+            <label for="bulk2_state">Address State: </label>
+            <input id="bulk2_state" type="text" name="bulk2_state" value="PR">
+        </li>
+        <li class="form-row">
+            <label for="bulk2_zip_code">Address Zip Code: </label>
+            <input id="bulk2_zip_code" type="text" name="bulk2_zip_code" value="00926">
+        </li>
+
+        <li class="button">
+            <input type="submit" value="OK"/>
+        </li>
+    </ul>
+</form>
+<div class="message-error hidden">
+    <span class="message-error-status">??</span>
+    <span class="message-error-status-text">??</span>
+    <span class="message-error-message">??</span>
+</div>
+
+<hr>
+<div>
+    <h4>SINGLE:</h4>
+    <pre>
+      <code class='language-javascript'>
+        <p> TEST PLACEHOLDER </p>
+      </code>
+    </pre>
+    <hr>
+
+    <h4>BULK:</h4>
+    <pre>
+      <code class='language-javascript'>
+        <p> TEST PLACEHOLDER </p>
+      </code>
+    </pre>
+</div>
+
+</body>
+<script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.10/highlight.min.js"></script>
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"
+        integrity="sha256-4+XzXVhsDmqanXGHaHvgh1gMQKX40OUvDEBTu8JcmNs=" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.25.0/axios.min.js"
+        integrity="sha512-/Q6t3CASm04EliI1QyIDAA/nDo9R8FQ/BULoUFyN4n/BDdyIxeH7u++Z+eobdmr11gG5D/6nPFyDlnisDwhpYA=="
+        crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script>hljs.initHighlightingOnLoad();</script>
+<script>
+    $(document).ready(() => {
+        const form = document.querySelector("#templates_form");
+        if (!form) {
+            console.warn('Unable to find form: #templates_form');
+            return;
+        }
+        form.onsubmit = async (event) => {
+            event.preventDefault();
+            event.stopPropagation();
+            document.getElementById("loading-overlay").classList.remove("hide-overlay");
+            document.querySelector(`.message-error`).classList.add('hidden');
+
+            let data = {};
+            for (const ele of event.target) {
+                if (!ele.name || !ele.value) {
+                    continue;
+                }
+                data = Object.assign({}, data, {[ele.name]: ele.value});
+            }
+            try {
+                const {data: verification} = await axios.post(`http://localhost:5555/us_verifications`, data);
+                document.getElementById("loading-overlay").classList.add("hide-overlay");
+                const nodes = document.querySelectorAll("code");
+                nodes[0].innerText = JSON.stringify(verification.single, null, 2);
+                nodes[1].innerText = JSON.stringify(verification.bulk, null, 2);
+            } catch (err) {
+                document.getElementById("loading-overlay").classList.add("hide-overlay");
+                document.querySelector(`.message-error`).classList.remove('hidden');
+                document.querySelector(`.message-error-status`).innerHTML = err.response.data.status;
+                document.querySelector(`.message-error-status-text`).innerHTML = err.response.data.statusText;
+                document.querySelector(`.message-error-message`).innerHTML = err.response.data.message;
+
+                console.log(err);
+            }
+        };
+    });
+</script>
+</html>
+

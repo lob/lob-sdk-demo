@@ -7,7 +7,7 @@ const session = require("express-session");
 const FileStore = require('session-file-store')(session);
 
 const LobRaw = require('lob');
-const Lob = LobRaw(process.env.LOB_API_KEY);
+const Lob = LobRaw(process.env.LOB_API_TEST_KEY);
 
 const packageJson = require('../package.json');
 
@@ -62,7 +62,15 @@ class App {
                 res.status(200).send({
                     ok: true,
                     sdk: 'node',
-                    version: packageJson.dependencies["lob"]
+                    version: packageJson.dependencies["lob"],
+                    supportedResources: [
+                        'ADDRESSES',
+                        'BANK_ACCOUNTS',
+                        'CHECKS',
+                        'LETTERS',
+                        'POSTCARDS',
+                        'SELF_MAILERS'
+                    ]
                 });
             } catch (err) {
                 res.status(500).send();
