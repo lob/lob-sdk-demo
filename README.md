@@ -39,6 +39,7 @@ In order to launch other demo implementations, simply run the "Docker Command" w
 |-----------------|-------------------------------------|----------------------------------------------------------------------------------------|
 | typescript-demo | `docker compose up typescript-demo` | [https://github.com/lob/lob-typescript-sdk](https://github.com/lob/lob-typescript-sdk) |
 | lob-node-demo   | `docker compose up lob-node-demo`   | [https://github.com/lob/lob-node](https://github.com/lob/lob-node)                     |
+| lob-java-demo   | `docker compose up lob-java-demo`   | [https://github.com/lob/lob-java](https://github.com/lob/lob-java)                     |
 
 **Note**: add a `-d` to any of the docker commands to detach the running instance from your active terminal.
 **Note**: add a `--build` while developing locally

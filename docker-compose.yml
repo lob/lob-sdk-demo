@@ -6,6 +6,17 @@ services:
     ports:
       - "8081:80"
 
+  lob-java-demo:
+    build: lob-java/.
+    depends_on:
+      - web-ui
+    environment:
+      PORT: 5555
+      LOB_API_TEST_KEY: ${LOB_API_TEST_KEY}
+      LOB_API_LIVE_KEY: ${LOB_API_LIVE_KEY}
+    ports:
+      - "5555:5555"
+
   lob-node-demo:
     build: lob-node/.
     depends_on:
@@ -24,6 +35,6 @@ services:
     environment:
       PORT: 5555
       LOB_API_TEST_KEY: ${LOB_API_TEST_KEY}
-      LOB_API_LIVE_KEY: ${LOB_API_LIVE_KEY}
+      LOB_LIVE_API_KEY: ${LOB_LIVE_API_KEY}
     ports:
       - "5555:5555"
